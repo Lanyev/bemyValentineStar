@@ -4,9 +4,10 @@ import { init } from '../lib/heartParticles'
 /**
  * Overlay de partículas: corazones luminosos (tipo mariposas Hollow Knight).
  * Canvas fullscreen detrás del UI, pointer-events: none.
- * Por defecto ON; si prefers-reduced-motion, OFF. Botón FX opcional para togglear.
+ * Por defecto ON; si prefers-reduced-motion, OFF.
+ * Botón opcional para refrescar la carta (nueva combinación de textos, sin volver al sobre).
  */
-export default function HeartParticles() {
+export default function HeartParticles({ onRefreshLetter }) {
   const backCanvasRef = useRef(null)
   const frontCanvasRef = useRef(null)
   const instanceRef = useRef(null)
@@ -48,8 +49,6 @@ export default function HeartParticles() {
     if (instanceRef.current) instanceRef.current.setEnabled(enabled)
   }, [enabled])
 
-  const toggleFx = () => setEnabledState((e) => !e)
-
   return (
     <>
       <canvas
@@ -64,15 +63,17 @@ export default function HeartParticles() {
         className="heart-particles-canvas heart-particles-canvas-front"
         aria-hidden="true"
       />
-      <button
-        type="button"
-        className="heart-particles-fx-btn"
-        onClick={toggleFx}
-        title={enabled ? 'Desactivar partículas' : 'Activar partículas'}
-        aria-label={enabled ? 'Desactivar efecto de partículas' : 'Activar efecto de partículas'}
-      >
-        FX
-      </button>
+      {onRefreshLetter && (
+        <button
+          type="button"
+          className="letter-refresh-btn"
+          onClick={onRefreshLetter}
+          title="Otra carta"
+          aria-label="Ver otra carta (nueva combinación de textos)"
+        >
+          Otra carta
+        </button>
+      )}
     </>
   )
 }

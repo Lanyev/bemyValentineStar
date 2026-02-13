@@ -105,15 +105,13 @@ body {
   z-index: 11;
 }
 
-.heart-particles-fx-btn {
+.letter-refresh-btn {
   position: fixed;
   bottom: 0.75rem;
   right: 0.75rem;
   z-index: 100;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  font-size: 0.65rem;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--pink-pastel);
   background: var(--white);
@@ -124,11 +122,11 @@ body {
   opacity: 0.7;
   transition: opacity 0.2s ease;
 }
-.heart-particles-fx-btn:hover,
-.heart-particles-fx-btn:focus-visible {
+.letter-refresh-btn:hover,
+.letter-refresh-btn:focus-visible {
   opacity: 1;
 }
-.heart-particles-fx-btn:focus {
+.letter-refresh-btn:focus {
   outline: none;
 }
 

@@ -8,9 +8,14 @@ import './styles/global.css'
 
 export default function App() {
   const [phase, setPhase] = useState('envelope')
+  const [letterKey, setLetterKey] = useState(0)
 
   const handleEnvelopeOpen = () => {
     setPhase('letter')
+  }
+
+  const handleRefreshLetter = () => {
+    setLetterKey((k) => k + 1)
   }
 
   return (
@@ -24,8 +29,8 @@ export default function App() {
 
       {phase === 'letter' && (
         <>
-          <HeartParticles />
-          <LoveLetter />
+          <HeartParticles onRefreshLetter={handleRefreshLetter} />
+          <LoveLetter key={letterKey} />
         </>
       )}
     </>
