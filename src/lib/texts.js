@@ -81,7 +81,7 @@ Desde ese día no piensa en otra cosa, no
 La cara le cambió
 Bandido se volvió
 No duerme y come poco a lado de su amor`,
-    song: 'Dos Necios de Verdad',
+    song: 'Como un ladron',
     artist: 'Edgar Oceransky & Raúl Ornelas',
     album: '2 Necios de Verdad',
     year: 2009,
