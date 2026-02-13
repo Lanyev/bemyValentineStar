@@ -64,8 +64,9 @@ function getBreakpoint(width) {
 
 function getParticleCount(w, h) {
   const bp = getBreakpoint(w)
+  const minCount = w < 600 ? 45 : 20
   const byArea = Math.floor((w * h / 10000) * bp.density)
-  return Math.min(bp.maxParticles, Math.max(20, byArea))
+  return Math.min(bp.maxParticles, Math.max(minCount, byArea))
 }
 
 // Paredes estáticas para que los corazones reboten
@@ -221,6 +222,8 @@ function init(canvas, options = {}) {
 
     const path = getHeartPath()
     const drift = SETTINGS.driftForce
+    const isMobile = (typeof window !== 'undefined' && window.innerWidth < 600)
+    const floatUp = isMobile ? 1.4 : 1
 
     for (let i = 0; i < heartBodies.length; i++) {
       const body = heartBodies[i]
@@ -229,7 +232,7 @@ function init(canvas, options = {}) {
       const c = body.heartConfig
       c.driftAngle += 0.002 + (i % 3) * 0.001
       const dx = Math.cos(c.driftAngle) * 0.3
-      const dy = -0.8
+      const dy = -0.8 * floatUp
       Body.applyForce(body, body.position, {
         x: dx * drift * (c.layer + 1),
         y: dy * drift * (c.layer + 1),
@@ -248,10 +251,13 @@ function init(canvas, options = {}) {
         })
       }
       if (Math.abs(orientationGamma) > 2 || Math.abs(orientationBeta) > 2) {
-        Body.applyForce(body, body.position, {
-          x: (orientationGamma * 0.0008) * (body.heartConfig.layer + 1),
-          y: (orientationBeta * 0.0005) * (body.heartConfig.layer + 1),
-        })
+        const tiltX = orientationGamma * 0.0008 * (body.heartConfig.layer + 1)
+        const tiltY = orientationBeta * 0.0005 * (body.heartConfig.layer + 1)
+        if (isMobile) {
+          Body.applyForce(body, body.position, { x: tiltX, y: Math.min(tiltY, 0) })
+        } else {
+          Body.applyForce(body, body.position, { x: tiltX, y: tiltY })
+        }
       }
     }
     windX *= SETTINGS.windDecay
@@ -286,6 +292,10 @@ function init(canvas, options = {}) {
 
   resize()
   if (typeof window !== 'undefined') {
+    if (window.innerWidth < 600) {
+      setTimeout(resize, 100)
+      setTimeout(resize, 400)
+    }
     window.addEventListener('resize', resize, { passive: true })
     visibilityHidden = document.visibilityState === 'hidden'
     document.addEventListener('visibilitychange', () => {
