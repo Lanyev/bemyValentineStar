@@ -22,30 +22,30 @@ npm run build
 
 Los archivos se generan en `dist/`.
 
-## GitHub Pages
+## GitHub Pages (recomendado: GitHub Actions)
 
-1. **Crea el repositorio en GitHub** con el nombre `bemyValentineStar` (o el que prefieras). Si usas otro nombre, edita `base` en `vite.config.js` para que coincida (por ejemplo `base: '/mi-repo/'`).
+El proyecto incluye un workflow que **construye y publica la web en GitHub Pages** cada vez que haces push a `main`. Así no necesitas ejecutar `npm run deploy` en tu PC (y se evita el error en Windows).
 
-2. **Sube el código** y enlaza el remoto si aún no lo has hecho:
+1. **Crea el repositorio en GitHub** con el nombre `bemyValentineStar`. Si usas otro nombre, edita `base` en `vite.config.js` (por ejemplo `base: '/mi-repo/'`).
+
+2. **Sube el código**:
    ```bash
    git remote add origin https://github.com/TU_USUARIO/bemyValentineStar.git
    git push -u origin main
    ```
 
-3. **Publica el sitio** con:
-   ```bash
-   npm run deploy
-   ```
-   Esto hace `vite build` y sube la carpeta `dist` a la rama `gh-pages`.
+3. **Activa GitHub Pages** en el repo:
+   - **Settings** → **Pages**.
+   - En **Build and deployment** → **Source** elige **GitHub Actions**.
 
-4. **Activa GitHub Pages** en el repo:
-   - Ve a **Settings** → **Pages**.
-   - En **Source** elige **Deploy from a branch**.
-   - Branch: `gh-pages`, carpeta **/ (root)**.
-   - Guarda. En unos minutos la web estará en:
-   - `https://TU_USUARIO.github.io/bemyValentineStar/`
+4. El primer push (o el siguiente) dispara el workflow **Deploy to GitHub Pages**. Cuando termine (pestaña **Actions**), la web estará en:
+   - **https://TU_USUARIO.github.io/bemyValentineStar/**
 
-Para actualizar el sitio después de cambios: `npm run deploy` y vuelve a hacer push si hace falta (gh-pages suele hacer push automático de la rama `gh-pages`).
+Para actualizar el sitio: solo haz `git push origin main`; el workflow vuelve a construir y publicar.
+
+---
+
+*Alternativa (sin Actions):* puedes publicar desde tu PC con `npm run deploy`. En Windows a veces falla por límites de longitud de ruta; en ese caso usar GitHub Actions es la opción recomendada.
 
 ## Subir a Git
 
