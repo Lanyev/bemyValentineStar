@@ -96,6 +96,8 @@ body {
   z-index: 1;
   pointer-events: none;
   display: block;
+  will-change: transform;
+  contain: paint;
 }
 
 /* Canvas delantero: corazones near pasan por delante de la carta */

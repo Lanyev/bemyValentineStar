@@ -8,6 +8,7 @@ import Matter from 'matter-js'
 const { Engine, World, Bodies, Body } = Matter
 
 // --- CONFIGURACIÓN CENTRAL ---
+const PHYSICS_STEP_MS = 1000 / 60 // ~16.67 ms, timestep fijo para fluidez
 const SETTINGS = {
   density: 0.6,
   speed: 0.35,
@@ -69,15 +70,23 @@ function getParticleCount(w, h) {
   return Math.min(bp.maxParticles, Math.max(minCount, byArea))
 }
 
-// Paredes estáticas para que los corazones reboten
+// Categorías de colisión: solo corazón-pared, no corazón-corazón (menos CPU)
+const COLLISION_WALL = 0x0001
+const COLLISION_HEART = 0x0002
+
 function createWalls(w, h) {
   const t = SETTINGS.wallThickness
   const half = t / 2
+  const wallOpts = {
+    isStatic: true,
+    label: 'wall',
+    collisionFilter: { group: 0, category: COLLISION_WALL, mask: COLLISION_HEART },
+  }
   return [
-    Bodies.rectangle(-half, h / 2, t, h + t * 2, { isStatic: true, label: 'wall' }),
-    Bodies.rectangle(w + half, h / 2, t, h + t * 2, { isStatic: true, label: 'wall' }),
-    Bodies.rectangle(w / 2, -half, w + t * 2, t, { isStatic: true, label: 'wall' }),
-    Bodies.rectangle(w / 2, h + half, w + t * 2, t, { isStatic: true, label: 'wall' }),
+    Bodies.rectangle(-half, h / 2, t, h + t * 2, wallOpts),
+    Bodies.rectangle(w + half, h / 2, t, h + t * 2, wallOpts),
+    Bodies.rectangle(w / 2, -half, w + t * 2, t, wallOpts),
+    Bodies.rectangle(w / 2, h + half, w + t * 2, t, wallOpts),
   ]
 }
 
@@ -106,6 +115,7 @@ function createHeartBodies(w, h, count, reducedMotion, fillScreen) {
       density: 0.002,
       label: 'heart',
       velocity: { x: vx, y: vy },
+      collisionFilter: { group: 0, category: COLLISION_HEART, mask: COLLISION_WALL },
     })
     body.heartConfig = {
       layer,
@@ -142,13 +152,15 @@ function init(canvas, options = {}) {
 
   const ctx = canvas.getContext('2d', { alpha: true })
   const ctxFront = frontCanvas ? frontCanvas.getContext('2d', { alpha: true }) : null
-  const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 2)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 600
+  const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, isMobile ? 1 : 2)
 
   let width = 0
   let height = 0
   let engine = null
   let heartBodies = []
   let lastTime = 0
+  let physicsAccumulator = 0
 
   function resize() {
     const w = canvas.clientWidth || 300
@@ -163,12 +175,14 @@ function init(canvas, options = {}) {
       frontCanvas.height = Math.floor(h * dpr)
     }
 
+    physicsAccumulator = 0
     if (engine) {
       World.clear(engine.world)
     } else {
       engine = Engine.create()
       engine.gravity.y = 0
       engine.gravity.x = 0
+      engine.timing.iterations = 4
     }
 
     const walls = createWalls(w, h)
@@ -179,7 +193,7 @@ function init(canvas, options = {}) {
     World.add(engine.world, heartBodies)
   }
 
-  function drawHeart(ctxDraw, body, path) {
+  function drawHeart(ctxDraw, body, path, stateRef) {
     const c = body.heartConfig
     if (!c) return
     c.phase += c.phaseSpeed
@@ -190,7 +204,10 @@ function init(canvas, options = {}) {
     ctxDraw.translate(body.position.x, body.position.y)
     ctxDraw.rotate(body.angle)
     ctxDraw.scale(size, size)
-    if (c.blur > 0) ctxDraw.filter = `blur(${c.blur}px)`
+    if (stateRef && stateRef.currentBlur !== c.blur) {
+      stateRef.currentBlur = c.blur
+      ctxDraw.filter = c.blur > 0 ? `blur(${c.blur}px)` : 'none'
+    } else if (!stateRef && c.blur > 0) ctxDraw.filter = `blur(${c.blur}px)`
     if (c.type === 'silhouette') {
       ctxDraw.fillStyle = `rgba(20, 25, 50, ${opacity * 0.9})`
       ctxDraw.fill(path)
@@ -207,26 +224,26 @@ function init(canvas, options = {}) {
     ctxDraw.restore()
   }
 
+  const drawStateBack = { currentBlur: -1 }
+  const drawStateFront = { currentBlur: -1 }
+
   function tick(timestamp = 0) {
     rafId = requestAnimationFrame(tick)
     if (!enabled || visibilityHidden || !engine) return
 
     const w = width || canvas.clientWidth
     const h = height || canvas.clientHeight
-    const delta = Math.min(20, lastTime ? timestamp - lastTime : 16)
+    const delta = Math.min(50, lastTime ? timestamp - lastTime : 16)
     lastTime = timestamp
-
-    Engine.update(engine, delta)
 
     const path = getHeartPath()
     const drift = SETTINGS.driftForce
-    const isMobile = (typeof window !== 'undefined' && window.innerWidth < 600)
-    const floatUp = isMobile ? 1.4 : 1
+    const isMobileFloat = (typeof window !== 'undefined' && window.innerWidth < 600)
+    const floatUp = isMobileFloat ? 1.4 : 1
 
     for (let i = 0; i < heartBodies.length; i++) {
       const body = heartBodies[i]
       if (!body.heartConfig) continue
-
       const c = body.heartConfig
       c.driftAngle += 0.002 + (i % 3) * 0.001
       const dx = Math.cos(c.driftAngle) * 0.3
@@ -235,7 +252,6 @@ function init(canvas, options = {}) {
         x: dx * drift * (c.layer + 1),
         y: dy * drift * (c.layer + 1),
       })
-
       const distToPointerX = body.position.x - pointerX
       const distToPointerY = body.position.y - pointerY
       const distSq = distToPointerX * distToPointerX + distToPointerY * distToPointerY
@@ -244,14 +260,22 @@ function init(canvas, options = {}) {
         const dist = Math.sqrt(distSq)
         const force = (1 - dist / SETTINGS.windTouchRadius) * SETTINGS.windTouchStrength
         Body.applyForce(body, body.position, {
-          x: (windX * force) / (body.heartConfig.layer + 1),
-          y: (windY * force) / (body.heartConfig.layer + 1),
+          x: (windX * force) / (c.layer + 1),
+          y: (windY * force) / (c.layer + 1),
         })
       }
     }
     windX *= SETTINGS.windDecay
     windY *= SETTINGS.windDecay
 
+    physicsAccumulator += delta
+    while (physicsAccumulator >= PHYSICS_STEP_MS) {
+      Engine.update(engine, PHYSICS_STEP_MS)
+      physicsAccumulator -= PHYSICS_STEP_MS
+    }
+
+    drawStateBack.currentBlur = -1
+    drawStateFront.currentBlur = -1
     if (ctxFront && frontCanvas) {
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -259,7 +283,7 @@ function init(canvas, options = {}) {
       for (let i = 0; i < heartBodies.length; i++) {
         const b = heartBodies[i]
         if (b.heartConfig && (b.heartConfig.layer === LAYER_MID || b.heartConfig.layer === LAYER_FAR)) {
-          drawHeart(ctx, b, path)
+          drawHeart(ctx, b, path, drawStateBack)
         }
       }
       ctxFront.setTransform(1, 0, 0, 1, 0, 0)
@@ -267,14 +291,14 @@ function init(canvas, options = {}) {
       ctxFront.scale(dpr, dpr)
       for (let i = 0; i < heartBodies.length; i++) {
         const b = heartBodies[i]
-        if (b.heartConfig && b.heartConfig.layer === LAYER_NEAR) drawHeart(ctxFront, b, path)
+        if (b.heartConfig && b.heartConfig.layer === LAYER_NEAR) drawHeart(ctxFront, b, path, drawStateFront)
       }
     } else {
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.scale(dpr, dpr)
       for (let i = 0; i < heartBodies.length; i++) {
-        if (heartBodies[i].heartConfig) drawHeart(ctx, heartBodies[i], path)
+        if (heartBodies[i].heartConfig) drawHeart(ctx, heartBodies[i], path, drawStateBack)
       }
     }
   }
