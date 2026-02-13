@@ -1,0 +1,339 @@
+/* San Valentín - Estética rosa pastel, cute minimal */
+:root {
+  --pink-light: #fff5f8;
+  --pink-pastel: #ffb6c1;
+  --pink-soft: #ffc0cb;
+  --pink-muted: #ffd1dc;
+  --white: #ffffff;
+  --shadow-soft: 0 4px 16px rgba(255, 182, 193, 0.2);
+  --radius: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--pink-light);
+  color: #333;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* Loading Screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--pink-light) 0%, var(--pink-muted) 100%);
+  z-index: 9999;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-heart {
+  width: 48px;
+  height: 48px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b9d'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") center/contain no-repeat;
+  animation: heartPulse 1.2s ease-in-out infinite;
+}
+
+.loading-image {
+  width: 64px;
+  height: 64px;
+  animation: spin 1.5s linear infinite;
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.9; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-heart,
+  .loading-image {
+    animation: none;
+  }
+}
+
+/* Heart particles overlay: fullscreen, detrás del UI, no bloquea taps */
+#heartParticles,
+.heart-particles-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  display: block;
+}
+
+/* Canvas delantero: corazones near pasan por delante de la carta */
+.heart-particles-canvas-front {
+  z-index: 11;
+}
+
+.heart-particles-fx-btn {
+  position: fixed;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  z-index: 100;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--pink-pastel);
+  background: var(--white);
+  border: 1px solid var(--pink-muted);
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.heart-particles-fx-btn:hover,
+.heart-particles-fx-btn:focus-visible {
+  opacity: 1;
+}
+.heart-particles-fx-btn:focus {
+  outline: none;
+}
+
+/* Background Slideshow */
+.background-slideshow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.background-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.background-slide.active {
+  opacity: 0.25;
+}
+
+.background-fallback {
+  opacity: 1;
+}
+
+/* Love Letter */
+.love-letter {
+  position: relative;
+  z-index: 10;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.letter-inner {
+  max-width: 420px;
+  width: 100%;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--pink-muted);
+  animation: letterAppear 0.8s ease-out forwards;
+}
+
+@keyframes letterAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.letter-hero {
+  font-size: 1.25rem;
+  color: #c25a7a;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.letter-intro {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0 0 1rem;
+  line-height: 1.6;
+}
+
+.letter-body {
+  margin: 1rem 0;
+}
+
+.letter-body p {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.letter-body .letter-credit {
+  font-size: 0.6rem;
+  color: #aaa;
+  margin: 0.75rem 0 0;
+  line-height: 1.5;
+  font-style: italic;
+  white-space: pre-line;
+}
+
+.letter-closing {
+  font-size: 0.95rem;
+  color: #c25a7a;
+  margin: 1.5rem 0 0;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter-inner {
+    animation: letterFade 0.4s ease-out forwards;
+  }
+}
+
+@keyframes letterFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Decorative Layer */
+.decorative-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.decor-item {
+  position: absolute;
+  pointer-events: none;
+}
+
+.decor-item img {
+  max-width: 80px;
+  height: auto;
+  object-fit: contain;
+}
+
+.decor-top-left {
+  top: 1rem;
+  left: 1rem;
+}
+
+.decor-top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+.decor-bottom-left {
+  bottom: 1rem;
+  left: 1rem;
+}
+
+.decor-bottom-right {
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.decor-center-overlay {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.decor-float {
+  animation: decorFloat 3s ease-in-out infinite;
+}
+
+.decor-pulse {
+  animation: decorPulse 2s ease-in-out infinite;
+}
+
+.decor-fade {
+  animation: decorFade 4s ease-in-out infinite;
+}
+
+@keyframes decorFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.decor-center-overlay.decor-float {
+  animation: decorFloatCenter 3s ease-in-out infinite;
+}
+
+@keyframes decorFloatCenter {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-50%, calc(-50% - 6px)); }
+}
+
+@keyframes decorPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+.decor-center-overlay.decor-pulse {
+  animation: decorPulseCenter 2s ease-in-out infinite;
+}
+
+@keyframes decorPulseCenter {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes decorFade {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decor-float,
+  .decor-pulse,
+  .decor-fade {
+    animation: none;
+  }
+}
