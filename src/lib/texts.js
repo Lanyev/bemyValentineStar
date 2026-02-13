@@ -1,38 +1,36 @@
 export const heroTexts = [
-  'Para mi Estrella más brillante ✨',
-  'Querida Estrellita 💕',
-  'Para la persona que ilumina mis días 🌟',
-  'Mi hermoso amor 💖',
-  'Preciosa mía 💗',
-  'Para mi reyna 👑',
-  'Mi chula favorita 💝',
-  'Querida mija del alma',
-  'Corazón mío ❤️',
-  'Mi niña hermosa 🌺',
-  'Princesa de mi corazón 💘',
-]
+  'Para mi Estrella ✨',
+  'Estrellita, siempre tú 💫',
+  'Amor, contigo todo tiene sentido 💖',
+  'Preciosa, mi lugar seguro 💗',
+  'Chula, la que me inspira 💝',
+  'Mija, mi paz favorita ❤️',
+  'Reyna de mis días 👑',
+  'Princesa, mi coincidencia más bonita 💘',
+  'Niña hermosa, mi mejor historia 🌺',
+];
 
 export const introTexts = [
-  'Hoy es un día muy especial y quería decirte...',
-  'Sé que no soy el mejor con las palabras, pero...',
-  'Cada día contigo es un regalo, y hoy más que nunca...',
-  'Desde que llegaste a mi vida, todo es más bonito...',
-  'Quería aprovechar este momento para contarte...',
-  'Hay algo que llevo en el corazón y hoy es el día perfecto para decirlo...',
-  'En este día tan especial, no puedo evitar pensar en...',
-  'Estrellita, hoy quiero que sepas...',
-]
+  'Hay cosas que simplemente se sienten...',
+  'A veces no sé cómo decirlo, pero lo intento...',
+  'Desde que estás aquí, todo cambió un poco...',
+  'No sé en qué momento pasó, pero pasó...',
+  'Hay algo que quiero que sepas...',
+  'No es casualidad que hoy piense en esto...',
+  'Si pudiera ponerlo en palabras, sonaría así...',
+  'Hoy solo quiero dejar esto aquí...',
+];
 
 export const closingTexts = [
-  'Con todo mi cariño. Feliz primer San Valentín 💕',
-  'Me encantas más de lo que imaginas. Feliz primer San Valentín, mi Estrella ✨',
-  'De todo corazón. Feliz primer San Valentín 🌹',
-  'Con un pedacito muy especial de mí. Feliz primer San Valentín 💖',
-  'Muy feliz de tenerte en mi vida. Feliz primer San Valentín 💗',
-  'Hoy celebro que estés aquí conmigo. Feliz primer San Valentín 💝',
-  'Con todo lo bonito que siento por ti. Feliz primer San Valentín ❤️',
-  'De alguien que sonríe cada vez que te ve. Feliz primer San Valentín 💘',
-]
+  'Con todo lo que siento por ti. Feliz primer San Valentín ❤️',
+  'Gracias por estar aquí. Feliz primer San Valentín ✨',
+  'Con el corazón abierto. Feliz primer San Valentín 💖',
+  'Que este sea solo el comienzo. Feliz primer San Valentín 💕',
+  'Contigo todo es diferente. Feliz primer San Valentín 💗',
+  'Sigamos escribiendo lo nuestro. Feliz primer San Valentín 💝',
+  'Siempre tú. Feliz primer San Valentín 🌹',
+  'De alguien que te elige todos los días. Feliz primer San Valentín 💘',
+];
 
 /**
  * Cuerpos de la carta (según loveletter.md).
@@ -112,4 +110,4 @@ Ojalá sea hoy, ojalá sea hoy...`,
     album: 'Carmesí',
     year: 2016,
   },
-]
+];
