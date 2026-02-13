@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 
+const BASE = import.meta.env.BASE_URL
 const DECOR_CONFIG = [
-  { src: '/decor/sticker-heart.png', position: 'top-right', animation: 'float' },
-  { src: '/decor/sticker-bow.png', position: 'bottom-left', animation: 'pulse' },
-  { src: '/decor/frame.png', position: 'center-overlay', animation: 'fade' },
-  { src: '/decor/hk-01.png', position: 'top-left', animation: 'float' },
-  { src: '/decor/hk-02.png', position: 'bottom-right', animation: 'pulse' },
+  { src: `${BASE}decor/sticker-heart.png`, position: 'top-right', animation: 'float' },
+  { src: `${BASE}decor/sticker-bow.png`, position: 'bottom-left', animation: 'pulse' },
+  { src: `${BASE}decor/frame.png`, position: 'center-overlay', animation: 'fade' },
+  { src: `${BASE}decor/hk-01.png`, position: 'top-left', animation: 'float' },
+  { src: `${BASE}decor/hk-02.png`, position: 'bottom-right', animation: 'pulse' },
 ]
 
 export default function DecorativeLayer() {

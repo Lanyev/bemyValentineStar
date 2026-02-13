@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const LOADER_IMAGE = '/ui/loader.png'
+const LOADER_IMAGE = `${import.meta.env.BASE_URL}ui/loader.png`
 const DURATION = 2100
 
 export default function LoadingScreen({ onComplete }) {

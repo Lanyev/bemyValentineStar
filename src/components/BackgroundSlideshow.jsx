@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 
+const BASE = import.meta.env.BASE_URL
 const PHOTOS = [
-  '/photos/bg-01.webp',
-  '/photos/bg-02.webp',
-  '/photos/bg-03.webp',
-  '/photos/bg-04.webp',
-  '/photos/bg-05.webp',
-  '/photos/bg-06.webp',
+  `${BASE}photos/bg-01.webp`,
+  `${BASE}photos/bg-02.webp`,
+  `${BASE}photos/bg-03.webp`,
+  `${BASE}photos/bg-04.webp`,
+  `${BASE}photos/bg-05.webp`,
+  `${BASE}photos/bg-06.webp`,
 ]
 
 const FALLBACK_GRADIENT = 'linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 50%, #ffe4e1 100%)'
