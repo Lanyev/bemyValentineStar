@@ -132,8 +132,6 @@ let lastPointerY = -1e4
 let visibilityHidden = false
 let reducedMotion = false
 let enabled = true
-let orientationGamma = 0
-let orientationBeta = 0
 
 function init(canvas, options = {}) {
   if (!canvas || !canvas.getContext) return
@@ -250,15 +248,6 @@ function init(canvas, options = {}) {
           y: (windY * force) / (body.heartConfig.layer + 1),
         })
       }
-      if (Math.abs(orientationGamma) > 2 || Math.abs(orientationBeta) > 2) {
-        const tiltX = orientationGamma * 0.0008 * (body.heartConfig.layer + 1)
-        const tiltY = orientationBeta * 0.0005 * (body.heartConfig.layer + 1)
-        if (isMobile) {
-          Body.applyForce(body, body.position, { x: tiltX, y: Math.min(tiltY, 0) })
-        } else {
-          Body.applyForce(body, body.position, { x: tiltX, y: tiltY })
-        }
-      }
     }
     windX *= SETTINGS.windDecay
     windY *= SETTINGS.windDecay
@@ -332,22 +321,6 @@ function init(canvas, options = {}) {
   document.addEventListener('mousemove', onPointerMove, { passive: true })
   document.addEventListener('touchstart', onTouchStart, { passive: true })
   document.addEventListener('mouseleave', onPointerLeave, { passive: true })
-
-  if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-    if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
-      window.DeviceOrientationEvent.requestPermission()
-        .then((perm) => { if (perm === 'granted') listenOrientation() })
-        .catch(() => {})
-    } else {
-      listenOrientation()
-    }
-  }
-  function listenOrientation() {
-    window.addEventListener('deviceorientation', (e) => {
-      orientationGamma = e.gamma != null ? e.gamma : 0
-      orientationBeta = e.beta != null ? e.beta : 0
-    }, { passive: true })
-  }
 
   tick(0)
 
