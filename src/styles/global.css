@@ -1,11 +1,14 @@
 /* San Valentín - Estética rosa pastel, cute minimal */
 :root {
+  --font-title: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-text: 'Inter', 'Lora', system-ui, sans-serif;
   --pink-light: #fff5f8;
   --pink-pastel: #ffb6c1;
   --pink-soft: #ffc0cb;
   --pink-muted: #ffd1dc;
   --white: #ffffff;
   --shadow-soft: 0 4px 16px rgba(255, 182, 193, 0.2);
+  --shadow-card: 0 2px 8px rgba(255, 182, 193, 0.12), 0 12px 32px rgba(194, 90, 122, 0.08);
   --radius: 12px;
 }
 
@@ -22,7 +25,7 @@ html {
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-family: var(--font-text);
   background: var(--pink-light);
   color: #333;
   min-height: 100dvh;
@@ -169,11 +172,14 @@ body {
 .letter-inner {
   max-width: 420px;
   width: 100%;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 2rem;
   border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--pink-muted);
+  box-shadow: var(--shadow-card),
+              0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  border: 1px solid rgba(255, 209, 220, 0.6);
   animation: letterAppear 0.8s ease-out forwards;
 }
 
@@ -189,6 +195,7 @@ body {
 }
 
 .letter-hero {
+  font-family: var(--font-title);
   font-size: 1.25rem;
   color: #c25a7a;
   margin: 0 0 1rem;
@@ -223,6 +230,7 @@ body {
 }
 
 .letter-closing {
+  font-family: var(--font-title);
   font-size: 0.95rem;
   color: #c25a7a;
   margin: 1.5rem 0 0;

@@ -45,10 +45,11 @@ const LAYER_NEAR = 0
 const LAYER_MID = 1
 const LAYER_FAR = 2
 
+// Profundidad: cerca = nítidos y rápidos, lejos = desenfocados, lentos y semitransparentes
 const LAYER_CONFIG = [
-  { scale: 1.8, speedMul: 1, blur: 4, silhouetteChance: 0.5 },
-  { scale: 1, speedMul: 1, blur: 0, silhouetteChance: 0.1 },
-  { scale: 0.5, speedMul: 0.7, blur: 0, silhouetteChance: 0 },
+  { scale: 1.8, speedMul: 1, blur: 0, opacityMul: 1, silhouetteChance: 0.5 },
+  { scale: 1, speedMul: 0.78, blur: 2, opacityMul: 0.72, silhouetteChance: 0.15 },
+  { scale: 0.5, speedMul: 0.48, blur: 5, opacityMul: 0.38, silhouetteChance: 0.25 },
 ]
 
 // Path2D del corazón (normalizado -1..1)
@@ -114,7 +115,9 @@ function createOneHeart(w, h, layer, reducedMotion) {
   const radius = Math.max(4, baseSize * 0.6)
   const x = Math.random() * (w - 40) + 20
   const y = h + 20 + Math.random() * SETTINGS.spawnHeight
-  const speed = (reducedMotion ? 12 : 27) * cfg.speedMul * (0.7 + Math.random() * 0.5)
+  // Variación extra de velocidad por corazón (algunos más lentos)
+  const speedVariation = 0.72 + Math.random() * 0.36
+  const speed = (reducedMotion ? 12 : 27) * cfg.speedMul * speedVariation
   const vx = (Math.random() - 0.5) * 6
   const vy = -speed
   const body = Bodies.circle(x, y, radius, {
@@ -131,6 +134,7 @@ function createOneHeart(w, h, layer, reducedMotion) {
     type: isSilhouette ? 'silhouette' : 'bright',
     baseSize,
     baseOpacity: isSilhouette ? 0.5 + Math.random() * 0.3 : 0.5 + Math.random() * 0.45,
+    opacityMul: cfg.opacityMul,
     blur: cfg.blur,
     phase: Math.random() * Math.PI * 2,
     phaseSpeed: 0.02 + Math.random() * 0.03,
@@ -223,7 +227,8 @@ function init(canvas, options = {}) {
     let lifeOpacity = 1
     if (y >= viewHeight - 100) lifeOpacity = Math.max(0, (viewHeight - y) / 100)
     else if (y <= 80) lifeOpacity = Math.max(0, y / 80)
-    const opacity = Math.max(0.02, c.baseOpacity * pulse * lifeOpacity)
+    const depthOpacity = c.opacityMul ?? 1
+    const opacity = Math.max(0.02, c.baseOpacity * pulse * lifeOpacity * depthOpacity)
 
     ctxDraw.save()
     ctxDraw.translate(body.position.x, body.position.y)
