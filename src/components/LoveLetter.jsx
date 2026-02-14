@@ -54,8 +54,10 @@ export default function LoveLetter() {
 
   return (
     <article className='love-letter' role='article'>
-      <div className='letter-inner letter-cinema'>
+      <div className='card-wrapper'>
+        <div className='letter-inner letter-cinema card'>
         <h1 className='letter-hero letter-reveal' style={{ '--reveal-delay': `${delayHero}s` }}>{hero}</h1>
+        <div className='title-divider letter-reveal' style={{ '--reveal-delay': `${delayHero}s` }} aria-hidden />
         <p className='letter-intro letter-reveal' style={{ '--reveal-delay': `${delayIntro}s` }}>{intro}</p>
         <div className='letter-body'>
           {bodyLines.map((line, i) => (
@@ -150,6 +152,7 @@ export default function LoveLetter() {
             </div>,
             document.body
           )}
+        </div>
       </div>
     </article>
   )
