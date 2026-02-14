@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { heroTexts, introTexts, closingTexts, letterBodies, photoSources } from '../lib/texts'
 import { randomItem } from '../lib/random'
@@ -9,6 +9,31 @@ const LINE_STAGGER = 0.2
 
 export default function LoveLetter() {
   const [photoOpen, setPhotoOpen] = useState(false)
+  const [photoRect, setPhotoRect] = useState(null)
+  const photoRef = useRef(null)
+
+  const updatePhotoRect = () => {
+    if (photoRef.current) {
+      setPhotoRect(photoRef.current.getBoundingClientRect())
+    }
+  }
+
+  useEffect(() => {
+    const t = setTimeout(updatePhotoRect, 100)
+    window.addEventListener('resize', updatePhotoRect)
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('resize', updatePhotoRect)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!photoRect) return
+    const observer = new ResizeObserver(updatePhotoRect)
+    if (photoRef.current) observer.observe(photoRef.current)
+    return () => observer.disconnect()
+  }, [photoRect])
+
   const { hero, intro, entry, closing, photo } = useMemo(() => ({
     hero: randomItem(heroTexts, 'hero'),
     intro: randomItem(introTexts, 'intro'),
@@ -52,6 +77,7 @@ export default function LoveLetter() {
         </div>
         <p className='letter-closing letter-reveal' style={{ '--reveal-delay': `${delayClosing}s` }}>{closing}</p>
         <button
+          ref={photoRef}
           type='button'
           className='letter-photo letter-photo-corner letter-reveal'
           style={{ '--reveal-delay': `${delayPhoto}s` }}
@@ -71,6 +97,24 @@ export default function LoveLetter() {
             </div>
           )}
         </button>
+
+        {photoRect != null &&
+          createPortal(
+            <button
+              type='button'
+              className='letter-photo-tap-overlay'
+              aria-label='Ver foto en grande'
+              style={{
+                position: 'fixed',
+                top: photoRect.top,
+                left: photoRect.left,
+                width: photoRect.width,
+                height: photoRect.height,
+              }}
+              onClick={() => setPhotoOpen(true)}
+            />,
+            document.body
+          )}
 
         {photoOpen &&
           createPortal(

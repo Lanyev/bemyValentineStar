@@ -103,15 +103,17 @@ body {
   contain: paint;
 }
 
-/* Canvas delantero: corazones near pasan por delante de la carta */
+/* Canvas delantero: corazones near pasan por delante de la carta; no bloquea taps */
 .heart-particles-canvas-front {
   z-index: 11;
+  pointer-events: none;
 }
 
 .letter-refresh-btn {
   position: fixed;
   bottom: 0.75rem;
-  right: 0.75rem;
+  left: 0.75rem;
+  right: auto;
   z-index: 100;
   padding: 0.35rem 0.6rem;
   font-size: 0.7rem;
@@ -303,6 +305,16 @@ body {
   padding-right: 6rem;
   font-weight: 500;
   white-space: pre-line;
+}
+
+/* Overlay transparente sobre la foto (portal), por encima de partículas, para que todo tap abra el lightbox */
+.letter-photo-tap-overlay {
+  z-index: 20;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Foto en esquina inferior derecha, 16:9, inclinada (derecha hacia arriba), masking tape en esquinas */
