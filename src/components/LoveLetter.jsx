@@ -7,7 +7,7 @@ const FADE_IN_DURATION = 1
 const TITLE_DELAY = 0.5
 const LINE_STAGGER = 0.2
 
-export default function LoveLetter() {
+export default function LoveLetter({ onRevealComplete }) {
   const [photoOpen, setPhotoOpen] = useState(false)
   const [photoRect, setPhotoRect] = useState(null)
   const photoRef = useRef(null)
@@ -51,6 +51,14 @@ export default function LoveLetter() {
   const delayCredit = delayIntro + LINE_STAGGER + bodyLines.length * LINE_STAGGER
   const delayClosing = delayCredit + LINE_STAGGER
   const delayPhoto = delayClosing + LINE_STAGGER
+
+  useEffect(() => {
+    const ms = (delayPhoto + 0.6) * 1000
+    const t = setTimeout(() => {
+      onRevealComplete?.()
+    }, ms)
+    return () => clearTimeout(t)
+  }, [delayPhoto, onRevealComplete])
 
   return (
     <article className='love-letter' role='article'>

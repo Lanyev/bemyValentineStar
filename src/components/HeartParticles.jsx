@@ -8,7 +8,7 @@ import PalettePostIts from './PalettePostIts'
  * Por defecto ON; si prefers-reduced-motion, OFF.
  * Botón opcional para refrescar la carta; post-its para cambiar paleta de corazones.
  */
-export default function HeartParticles({ onRefreshLetter, paletteIndex = 0, onPaletteChange }) {
+export default function HeartParticles({ onRefreshLetter, onBackToEnvelope, paletteIndex = 0, onPaletteChange, showControls = true }) {
   const backCanvasRef = useRef(null)
   const frontCanvasRef = useRef(null)
   const instanceRef = useRef(null)
@@ -69,25 +69,42 @@ export default function HeartParticles({ onRefreshLetter, paletteIndex = 0, onPa
         className="heart-particles-canvas heart-particles-canvas-front"
         aria-hidden="true"
       />
-      {(onRefreshLetter || onPaletteChange) && (
+      {showControls && (onRefreshLetter || onPaletteChange || onBackToEnvelope) && (
         <div className="letter-controls">
-          {onRefreshLetter && (
-            <button
-              type="button"
-              className="letter-refresh-btn"
-              onClick={onRefreshLetter}
-              title="Otra carta"
-              aria-label="Ver otra carta (nueva combinación de textos)"
-            >
-              Otra carta
-            </button>
-          )}
-          {onPaletteChange && (
-            <PalettePostIts
-              paletteIndex={paletteIndex}
-              onSelect={onPaletteChange}
-            />
-          )}
+          <div className="letter-controls-left">
+            {onRefreshLetter && (
+              <button
+                type="button"
+                className="letter-refresh-btn"
+                onClick={onRefreshLetter}
+                title="Otra carta"
+                aria-label="Ver otra carta (nueva combinación de textos)"
+              >
+                Otra carta
+              </button>
+            )}
+          </div>
+          <div className="letter-controls-center">
+            {onPaletteChange && (
+              <PalettePostIts
+                paletteIndex={paletteIndex}
+                onSelect={onPaletteChange}
+              />
+            )}
+          </div>
+          <div className="letter-controls-right">
+            {onBackToEnvelope && (
+              <button
+                type="button"
+                className="letter-refresh-btn"
+                onClick={onBackToEnvelope}
+                title="Regresar"
+                aria-label="Volver al sobre"
+              >
+                Regresar
+              </button>
+            )}
+          </div>
         </div>
       )}
     </>
