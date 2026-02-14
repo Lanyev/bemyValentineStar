@@ -70,6 +70,32 @@ function getHeartPath() {
   return heartPath
 }
 
+/** Dibuja un corazón en el canvas según body.heartConfig (path normalizado -1..1, escala y color). */
+function drawHeart(ctx, body, drawState, viewHeight) {
+  const c = body.heartConfig
+  if (!c) return
+  const blur = c.blur ?? 0
+  if (blur !== drawState.currentBlur) {
+    drawState.currentBlur = blur
+    ctx.filter = blur ? `blur(${blur}px)` : 'none'
+  }
+  const size = c.baseSize ?? 12
+  const x = body.position.x
+  const y = body.position.y
+  const opacity = (c.baseOpacity ?? 0.7) * (c.opacityMul ?? 1)
+  if (c.type === 'silhouette') {
+    ctx.fillStyle = `rgba(120, 60, 90, ${opacity})`
+  } else {
+    const { r, g, b } = c.color || { r: 255, g: 192, b: 203 }
+    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`
+  }
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.scale(size / 2, size / 2)
+  ctx.fill(getHeartPath())
+  ctx.restore()
+}
+
 function getBreakpoint(width) {
   if (width < 600) return SETTINGS.breakpoints.mobile
   if (width < 900) return SETTINGS.breakpoints.tablet
@@ -217,43 +243,6 @@ function init(canvas, options = {}) {
     World.add(engine.world, heartBodies)
   }
 
-  function drawHeart(ctxDraw, body, path, stateRef, viewHeight) {
-    const c = body.heartConfig
-    if (!c) return
-    c.phase += c.phaseSpeed
-    const size = c.baseSize * (0.9 + Math.sin(c.phase * 0.5) * 0.1)
-    const pulse = 0.85 + Math.sin(c.phase * 0.3) * 0.15
-    const y = body.position.y
-    let lifeOpacity = 1
-    if (y >= viewHeight - 100) lifeOpacity = Math.max(0, (viewHeight - y) / 100)
-    else if (y <= 80) lifeOpacity = Math.max(0, y / 80)
-    const depthOpacity = c.opacityMul ?? 1
-    const opacity = Math.max(0.02, c.baseOpacity * pulse * lifeOpacity * depthOpacity)
-
-    ctxDraw.save()
-    ctxDraw.translate(body.position.x, body.position.y)
-    ctxDraw.rotate(body.angle)
-    ctxDraw.scale(size, size)
-    if (stateRef && stateRef.currentBlur !== c.blur) {
-      stateRef.currentBlur = c.blur
-      ctxDraw.filter = c.blur > 0 ? `blur(${c.blur}px)` : 'none'
-    } else if (!stateRef && c.blur > 0) ctxDraw.filter = `blur(${c.blur}px)`
-    const col = c.color || { r: 255, g: 182, b: 193 }
-    if (c.type === 'silhouette') {
-      ctxDraw.fillStyle = `rgba(${Math.round(col.r * 0.4)}, ${Math.round(col.g * 0.35)}, ${Math.round(col.b * 0.45)}, ${opacity * 0.9})`
-      ctxDraw.fill(path)
-    } else {
-      ctxDraw.globalAlpha = opacity
-      ctxDraw.fillStyle = `rgba(${col.r}, ${col.g}, ${col.b}, 0.95)`
-      ctxDraw.fill(path)
-      ctxDraw.shadowColor = `rgba(${col.r}, ${col.g}, ${Math.min(255, col.b + 40)}, 0.85)`
-      ctxDraw.shadowBlur = 10 * SETTINGS.glowIntensity
-      ctxDraw.fill(path)
-      ctxDraw.shadowBlur = 0
-      ctxDraw.globalAlpha = 1
-    }
-    ctxDraw.restore()
-  }
 
   const drawStateBack = { currentBlur: -1 }
   const drawStateFront = { currentBlur: -1 }
@@ -267,7 +256,6 @@ function init(canvas, options = {}) {
     const delta = Math.min(50, lastTime ? timestamp - lastTime : 16)
     lastTime = timestamp
 
-    const path = getHeartPath()
     const drift = SETTINGS.driftForce
     const isMobileFloat = (typeof window !== 'undefined' && window.innerWidth < 600)
     const floatUp = isMobileFloat ? 1.4 : 1
@@ -338,7 +326,7 @@ function init(canvas, options = {}) {
       for (let i = 0; i < heartBodies.length; i++) {
         const b = heartBodies[i]
         if (b.heartConfig && (b.heartConfig.layer === LAYER_MID || b.heartConfig.layer === LAYER_FAR)) {
-          drawHeart(ctx, b, path, drawStateBack, h)
+          drawHeart(ctx, b, drawStateBack, h)
         }
       }
       ctxFront.setTransform(1, 0, 0, 1, 0, 0)
@@ -346,14 +334,14 @@ function init(canvas, options = {}) {
       ctxFront.scale(dpr, dpr)
       for (let i = 0; i < heartBodies.length; i++) {
         const b = heartBodies[i]
-        if (b.heartConfig && b.heartConfig.layer === LAYER_NEAR) drawHeart(ctxFront, b, path, drawStateFront, h)
+        if (b.heartConfig && b.heartConfig.layer === LAYER_NEAR) drawHeart(ctxFront, b, drawStateFront, h)
       }
     } else {
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.scale(dpr, dpr)
       for (let i = 0; i < heartBodies.length; i++) {
-        if (heartBodies[i].heartConfig) drawHeart(ctx, heartBodies[i], path, drawStateBack, h)
+        if (heartBodies[i].heartConfig) drawHeart(ctx, heartBodies[i], drawStateBack, h)
       }
     }
   }

@@ -1,4 +1,4 @@
-# San Valentín — Página Sorpresa (Hello Kitty Inspired) — Instrucciones para Cursor Agent
+# San Valentín — Página Sorpresa — Instrucciones para Cursor Agent
 
 ## Objetivo
 Crear una página web romántica, mobile-first, rápida y ligera con el siguiente flujo:
@@ -8,11 +8,10 @@ Crear una página web romántica, mobile-first, rápida y ligera con el siguient
 3) Apertura animada del sobre
 4) Aparición de carta romántica
 5) Fondo con fotos desenfocadas
-6) Posibilidad de agregar imágenes decorativas estilo Hello Kitty
+6) Posibilidad de agregar imágenes decorativas (stickers, marcos, íconos)
 
 IMPORTANTE:
-Se permitirá usar imágenes decorativas estilo Hello Kitty (stickers, marcos, íconos),
-pero deben ser opcionales y no romper el diseño si no existen.
+Las imágenes decorativas deben ser opcionales y no romper el diseño si no existen.
 
 ---
 
@@ -199,8 +198,7 @@ Paleta:
 - Cute minimal
 
 Evitar:
-- Logos oficiales
-- Texto que diga "Hello Kitty"
+- Logos oficiales de terceros
 
 Se permite:
 - Stickers estilo kawaii
