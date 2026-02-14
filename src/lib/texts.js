@@ -36,8 +36,11 @@ export const closingTexts = [
  * Cuerpos de la carta (según loveletter.md).
  * Cada entrada tiene letra + metadata para mostrar crédito debajo.
  * Se elige una al azar en cada carga.
- * @typedef {{ body: string, song: string, artist: string, album?: string, year?: number }} LetterEntry
+ * audioUrl: opcional; ruta al MP3 en public/audio/ (ej. audio/cancion.mp3). Si existe, se puede reproducir música según la carta.
+ * @typedef {{ body: string, song: string, artist: string, album?: string, year?: number, audioUrl?: string }} LetterEntry
  */
+const audioBase = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.BASE_URL : ''
+
 export const letterBodies = [
   {
     body: `Y es que hay veces que no entiendo cuando me dices, amor
@@ -49,6 +52,7 @@ Es amor`,
     artist: 'Rayden',
     album: 'Homónimo',
     year: 2021,
+    audioUrl: `${audioBase}audio/rayden-mujer-cactus.mp3`,
   },
   {
     body: `Hay muchas cosas en el mundo
@@ -59,18 +63,7 @@ De decírtelo`,
     artist: 'Reyno',
     album: 'Dualidad',
     year: 2015,
-  },
-  {
-    body: `Yo me conozco bien, me queda muy poco
-Pa' que tus besos me vuelvan loco
-Y de mi locura, te haré culpable
-
-Y esa sonrisa dulce que me hipnotiza
-Hace que yo respire de prisa
-Qué perras ganas de ir a besarte`,
-    song: 'Coqueta (Remix)',
-    artist: 'Heredero feat. Jessi Uribe',
-    year: 2024,
+    audioUrl: `${audioBase}audio/reyno-formula.mp3`,
   },
   {
     body: `De ella se enamoró
@@ -83,6 +76,7 @@ No duerme y come poco a lado de su amor`,
     artist: 'Edgar Oceransky & Raúl Ornelas',
     album: '2 Necios de Verdad',
     year: 2009,
+    audioUrl: `${audioBase}audio/oceransky-como-un-ladron.mp3`,
   },
   {
     body: `Yo solo tengo un montón
@@ -93,6 +87,7 @@ Dime si quieres tomar el riesgo`,
     artist: 'Raúl Ornelas',
     album: 'En El Exilio',
     year: 1999,
+    audioUrl: `${audioBase}audio/ornelas-el-riesgo.mp3`,
   },
   {
     body: `Pienso en tocarte, pienso en tu cuerpo
@@ -109,6 +104,7 @@ Ojalá sea hoy, ojalá sea hoy...`,
     artist: 'José Madero',
     album: 'Carmesí',
     year: 2016,
+    audioUrl: `${audioBase}audio/jose-madero-lunes-28.mp3`,
   },
 ];
 

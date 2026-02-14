@@ -2,6 +2,7 @@ import { useMemo, useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { heroTexts, introTexts, closingTexts, letterBodies, photoSources } from '../lib/texts'
 import { randomItem } from '../lib/random'
+import LetterMusic from './LetterMusic'
 
 const FADE_IN_DURATION = 1
 const TITLE_DELAY = 0.5
@@ -84,6 +85,11 @@ export default function LoveLetter({ onRevealComplete }) {
           >
             {creditLines.join('\n')}
           </p>
+          {entry.audioUrl && (
+            <div className='letter-reveal' style={{ '--reveal-delay': `${delayCredit + LINE_STAGGER}s` }}>
+              <LetterMusic entry={entry} />
+            </div>
+          )}
         </div>
         <p className='letter-closing letter-reveal' style={{ '--reveal-delay': `${delayClosing}s` }}>{closing}</p>
         <button
