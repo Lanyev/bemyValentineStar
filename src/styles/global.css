@@ -286,6 +286,13 @@ body {
 /* Foto en esquina inferior derecha, 16:9, inclinada (derecha hacia arriba), masking tape en esquinas */
 .letter-photo {
   overflow: visible;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .letter-photo-corner {
@@ -296,6 +303,11 @@ body {
   transform: rotate(6deg);
   transform-origin: center center;
   z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.letter-photo-corner:active {
+  transform: rotate(6deg) scale(1.05);
 }
 
 .letter-photo-corner .letter-photo-img,
@@ -374,6 +386,113 @@ body {
 .letter-photo-placeholder-text {
   font-size: 0.7rem;
   font-family: var(--font-text);
+}
+
+/* Lightbox: foto ampliada con fondo oscurecido y botón cerrar */
+.letter-photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: lightboxFadeIn 0.25s ease-out forwards;
+}
+
+.letter-photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.letter-photo-lightbox-content {
+  position: relative;
+  max-width: 92vw;
+  max-height: 85vh;
+  animation: lightboxScaleIn 0.3s ease-out forwards;
+}
+
+.letter-photo-lightbox-close {
+  position: absolute;
+  top: -2.25rem;
+  right: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  -webkit-tap-highlight-color: transparent;
+  z-index: 1;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.letter-photo-lightbox-close:hover,
+.letter-photo-lightbox-close:focus-visible {
+  background: #fff;
+  transform: scale(1.08);
+}
+
+.letter-photo-lightbox-close:active {
+  transform: scale(0.96);
+}
+
+.letter-photo-lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: 85vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.letter-photo-lightbox-placeholder {
+  min-width: 280px;
+  min-height: 157px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes lightboxFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lightboxScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter-photo-corner:active {
+    transform: rotate(6deg);
+  }
+  .letter-photo-lightbox {
+    animation: lightboxFadeIn 0.15s ease-out forwards;
+  }
+  .letter-photo-lightbox-content {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

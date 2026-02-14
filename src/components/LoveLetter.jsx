@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { heroTexts, introTexts, closingTexts, letterBodies, photoSources } from '../lib/texts'
 import { randomItem } from '../lib/random'
 
@@ -7,6 +8,7 @@ const TITLE_DELAY = 0.5
 const LINE_STAGGER = 0.2
 
 export default function LoveLetter() {
+  const [photoOpen, setPhotoOpen] = useState(false)
   const { hero, intro, entry, closing, photo } = useMemo(() => ({
     hero: randomItem(heroTexts, 'hero'),
     intro: randomItem(introTexts, 'intro'),
@@ -49,10 +51,12 @@ export default function LoveLetter() {
           </p>
         </div>
         <p className='letter-closing letter-reveal' style={{ '--reveal-delay': `${delayClosing}s` }}>{closing}</p>
-        <div
+        <button
+          type='button'
           className='letter-photo letter-photo-corner letter-reveal'
           style={{ '--reveal-delay': `${delayPhoto}s` }}
-          aria-hidden
+          onClick={() => setPhotoOpen(true)}
+          aria-label='Ver foto en grande'
         >
           <span className='letter-photo-tape letter-photo-tape-tl' aria-hidden />
           <span className='letter-photo-tape letter-photo-tape-tr' aria-hidden />
@@ -66,7 +70,42 @@ export default function LoveLetter() {
               <span className='letter-photo-placeholder-text'>Foto</span>
             </div>
           )}
-        </div>
+        </button>
+
+        {photoOpen &&
+          createPortal(
+            <div
+              className='letter-photo-lightbox'
+              role='dialog'
+              aria-modal='true'
+              aria-label='Foto ampliada'
+              onClick={() => setPhotoOpen(false)}
+            >
+              <div className='letter-photo-lightbox-backdrop' aria-hidden />
+              <div
+                className='letter-photo-lightbox-content'
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type='button'
+                  className='letter-photo-lightbox-close'
+                  onClick={() => setPhotoOpen(false)}
+                  aria-label='Cerrar'
+                >
+                  ×
+                </button>
+                {photo != null && photo !== '' ? (
+                  <img src={photo} alt='' className='letter-photo-lightbox-img' />
+                ) : (
+                  <div className='letter-photo-placeholder letter-photo-lightbox-placeholder'>
+                    <span className='letter-photo-placeholder-icon'>🖼️</span>
+                    <span className='letter-photo-placeholder-text'>Foto</span>
+                  </div>
+                )}
+              </div>
+            </div>,
+            document.body
+          )}
       </div>
     </article>
   )
