@@ -22,14 +22,14 @@ export const introTexts = [
 ];
 
 export const closingTexts = [
-  'Con todo lo que siento por ti. Feliz primer San Valentín ❤️',
-  'Gracias por estar aquí. Feliz primer San Valentín ✨',
-  'Con el corazón abierto. Feliz primer San Valentín 💖',
-  'Que este sea solo el comienzo. Feliz primer San Valentín 💕',
-  'Contigo todo es diferente. Feliz primer San Valentín 💗',
-  'Sigamos escribiendo lo nuestro. Feliz primer San Valentín 💝',
-  'Siempre tú. Feliz primer San Valentín 🌹',
-  'De alguien que te elige todos los días. Feliz primer San Valentín 💘',
+  'Con todo lo que siento por ti.\nFeliz primer San Valentín ❤️',
+  'Gracias por estar aquí.\nFeliz primer San Valentín ✨',
+  'Con el corazón abierto.\nFeliz primer San Valentín 💖',
+  'Que este sea solo el comienzo.\nFeliz primer San Valentín 💕',
+  'Contigo todo es diferente.\nFeliz primer San Valentín 💗',
+  'Sigamos escribiendo lo nuestro.\nFeliz primer San Valentín 💝',
+  'Siempre tú.\nFeliz primer San Valentín 🌹',
+  'De alguien que te elige todos los días. \nFeliz primer San Valentín 💘',
 ];
 
 /**

@@ -183,6 +183,41 @@ body {
   animation: letterAppear 0.8s ease-out forwards;
 }
 
+/* Entrada cinematográfica: fade in + subir ligeramente */
+.letter-inner.letter-cinema {
+  animation: letterCinemaIn 1s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes letterCinemaIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Título y líneas: aparecen con retraso, fade + ligera subida */
+.letter-reveal {
+  opacity: 0;
+  animation: letterRevealIn 0.5s ease-out forwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+@keyframes letterRevealIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes letterAppear {
   from {
     opacity: 0;
@@ -220,6 +255,14 @@ body {
   margin: 0;
 }
 
+.letter-body .letter-line {
+  margin: 0.25em 0 0;
+}
+
+.letter-body .letter-line:first-child {
+  margin-top: 0;
+}
+
 .letter-body .letter-credit {
   font-size: 0.6rem;
   color: #aaa;
@@ -235,11 +278,20 @@ body {
   color: #c25a7a;
   margin: 1.5rem 0 0;
   font-weight: 500;
+  white-space: pre-line;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .letter-inner {
     animation: letterFade 0.4s ease-out forwards;
+  }
+  .letter-inner.letter-cinema {
+    animation: letterFade 0.4s ease-out forwards;
+  }
+  .letter-reveal {
+    opacity: 1;
+    animation: none;
+    transform: none;
   }
 }
 
