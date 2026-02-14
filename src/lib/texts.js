@@ -29,7 +29,7 @@ export const closingTexts = [
   'Contigo todo es diferente.\nFeliz primer San Valentín 💗',
   'Sigamos escribiendo lo nuestro.\nFeliz primer San Valentín 💝',
   'Siempre tú.\nFeliz primer San Valentín 🌹',
-  'De alguien que te elige todos los días. \nFeliz primer San Valentín 💘',
+  'De alguien \nque te elige todos los días. \nFeliz primer San Valentín 💘',
 ];
 
 /**
