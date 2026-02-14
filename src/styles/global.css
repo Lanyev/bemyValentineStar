@@ -1,15 +1,50 @@
-/* San Valentín - Estética rosa pastel, cute minimal */
+/* San Valentín - Temas: rosa (0), azul (1), verde (2), amarillo (3), melocotón (4), dark (5) */
 :root {
   --font-title: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
   --font-text: 'Inter', 'Lora', system-ui, sans-serif;
-  --pink-light: #fff5f8;
-  --pink-pastel: #ffb6c1;
-  --pink-soft: #ffc0cb;
-  --pink-muted: #ffd1dc;
-  --white: #ffffff;
-  --shadow-soft: 0 4px 16px rgba(255, 182, 193, 0.2);
-  --shadow-card: 0 2px 8px rgba(255, 182, 193, 0.12), 0 12px 32px rgba(194, 90, 122, 0.08);
   --radius: 12px;
+  /* Tema 0 - Rosa (default) */
+  --theme-bg-1: #fffdfd;
+  --theme-bg-2: #fff2f6;
+  --theme-text: #333;
+  --theme-accent: #c25a7a;
+  --theme-accent-strong: #d6336c;
+  --theme-text-muted: #555;
+  --theme-text-body: #444;
+  --theme-text-subtle: #aaa;
+  --theme-card-bg-1: #fffafc;
+  --theme-card-bg-2: #fdf3f7;
+  --theme-card-bg-3: #faeef3;
+  --theme-card-bg-inner-1: #ffffff;
+  --theme-card-bg-inner-2: #fff7fa;
+  --theme-card-border: rgba(214, 118, 147, 0.18);
+  --theme-card-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+  --theme-card-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --theme-frame-1: #f48fb1;
+  --theme-frame-2: #ec407a;
+  --theme-frame-shadow: 0 40px 80px rgba(214, 51, 108, 0.18), 0 15px 30px rgba(0, 0, 0, 0.08);
+  --theme-surface: #ffffff;
+  --theme-shadow-soft: 0 4px 16px rgba(255, 182, 193, 0.2);
+  --theme-controls-color: #ffb6c1;
+  --theme-controls-bg: #ffffff;
+  --theme-controls-border: #ffd1dc;
+  --theme-loading-bg-1: #fff5f8;
+  --theme-loading-bg-2: #ffd1dc;
+  --theme-loading-text: #888;
+  --theme-focus-ring: rgba(194, 90, 122, 0.7);
+  --theme-envelope-base-1: #fff5f8;
+  --theme-envelope-base-2: #ffe4ec;
+  --theme-envelope-border: #f8c4d4;
+  --theme-envelope-front: #fff0f5;
+  --theme-envelope-flap: #ffe4ec;
+  --theme-envelope-seal-1: #ff9ebb;
+  --theme-envelope-seal-2: #ff6b9d;
+  --theme-envelope-shadow: 0 4px 12px rgba(255, 182, 193, 0.3);
+  --theme-lightbox-backdrop: rgba(0, 0, 0, 0.75);
+  --theme-lightbox-close-bg: rgba(255, 255, 255, 0.95);
+  --theme-lightbox-close-color: #333;
+  --theme-bg-fallback: linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 50%, #ffe4e1 100%);
+  --theme-card-shine: rgba(255, 255, 255, 0.6);
 }
 
 *,
@@ -26,8 +61,8 @@ html {
 body {
   margin: 0;
   font-family: var(--font-text);
-  background: var(--pink-light);
-  color: #333;
+  background: linear-gradient(180deg, var(--theme-bg-1), var(--theme-bg-2));
+  color: var(--theme-text);
   min-height: 100dvh;
   overflow-x: hidden;
 }
@@ -44,7 +79,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--pink-light) 0%, var(--pink-muted) 100%);
+  background: linear-gradient(135deg, var(--theme-loading-bg-1) 0%, var(--theme-loading-bg-2) 100%);
   z-index: 9999;
 }
 
@@ -70,7 +105,7 @@ body {
 
 .loading-text {
   font-size: 0.9rem;
-  color: #888;
+  color: var(--theme-loading-text);
 }
 
 @keyframes heartPulse {
@@ -109,20 +144,31 @@ body {
   pointer-events: none;
 }
 
-.letter-refresh-btn {
+/* Barra inferior: Otra carta + post-its de paleta (mismo nivel y tamaño) */
+.letter-controls {
   position: fixed;
   bottom: 0.75rem;
   left: 0.75rem;
   right: auto;
   z-index: 100;
-  padding: 0.35rem 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.letter-refresh-btn {
+  padding: 0 0.6rem;
+  min-height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--pink-pastel);
-  background: var(--white);
-  border: 1px solid var(--pink-muted);
+  color: var(--theme-controls-color);
+  background: var(--theme-controls-bg);
+  border: 1px solid var(--theme-controls-border);
   border-radius: 6px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--theme-shadow-soft);
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.2s ease;
@@ -158,6 +204,7 @@ body {
 
 .background-fallback {
   opacity: 1;
+  background: var(--theme-bg-fallback);
 }
 
 /* Love Letter */
@@ -171,46 +218,121 @@ body {
   padding: 2rem 1rem;
 }
 
-/* Marco romántico con degradado */
+/* Post-its de paleta: en la barra inferior, mismo tamaño que "Otra carta" */
+.palette-postits {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.palette-postit {
+  --postit-color: #f4a896;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--postit-color);
+  box-shadow: var(--theme-shadow-soft);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  opacity: 0.85;
+}
+
+.palette-postit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, transparent 50%);
+  border-radius: 0 6px 6px 0;
+  pointer-events: none;
+}
+
+.palette-postit:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.palette-postit:focus {
+  outline: none;
+}
+
+.palette-postit:focus-visible {
+  box-shadow: 0 0 0 2px var(--theme-accent);
+}
+
+.palette-postit--active {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px var(--theme-focus-ring);
+}
+
+/* Marco romántico con degradado fino y elegante (aparece después de la carta) */
 .card-wrapper {
-  padding: 4px;
-  border-radius: 32px;
-  background: linear-gradient(
-    135deg,
-    #f78fb3,
-    #ff6b9d,
-    #d6336c
-  );
+  position: relative;
+  padding: 3px;
+  border-radius: 36px;
+  background: transparent;
+}
+
+.card-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 36px;
+  background: linear-gradient(135deg, var(--theme-frame-1), var(--theme-frame-2));
+  box-shadow: var(--theme-frame-shadow);
+  z-index: -1;
+  opacity: 0;
+  animation: borderReveal 0.5s ease-out 1s forwards;
+  pointer-events: none;
+}
+
+@keyframes borderReveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .card-wrapper .letter-inner.card {
-  background: #fff;
-  border-radius: 28px;
+  background: linear-gradient(180deg, var(--theme-card-bg-inner-1), var(--theme-card-bg-inner-2));
+  border-radius: 36px;
   padding: 3rem;
-  background-image: none;
   border: none;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 30%;
+  width: 100%;
+  background: linear-gradient(to bottom, var(--theme-card-shine), transparent);
+  border-radius: 36px;
+  pointer-events: none;
 }
 
 .letter-inner {
   position: relative;
   max-width: 420px;
   width: 100%;
-  /* Fondo tipo papel fino romántico */
   background:
-    linear-gradient(180deg, #fffafc 0%, #fdf3f7 60%, #faeef3 100%);
+    linear-gradient(180deg, var(--theme-card-bg-1) 0%, var(--theme-card-bg-2) 60%, var(--theme-card-bg-3) 100%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 2.5rem 2.25rem;
-  border-radius: 24px;
-  /* Sombra interior muy ligera + profundidad suave */
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 25px 60px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(214, 118, 147, 0.18);
+  border-radius: 36px;
+  box-shadow: var(--theme-card-shadow-inset), var(--theme-card-shadow);
+  border: 1px solid var(--theme-card-border);
   animation: letterAppear 0.8s ease-out forwards;
-  /* Textura sutil de papel */
   background-image:
-    linear-gradient(180deg, #fffafc 0%, #fdf3f7 60%, #faeef3 100%),
+    linear-gradient(180deg, var(--theme-card-bg-1) 0%, var(--theme-card-bg-2) 60%, var(--theme-card-bg-3) 100%),
     url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
@@ -263,7 +385,7 @@ body {
 .letter-hero {
   font-family: var(--font-title);
   font-size: 1.25rem;
-  color: #c25a7a;
+  color: var(--theme-accent);
   margin: 0 0 0;
   line-height: 1.4;
   letter-spacing: 0.02em;
@@ -272,14 +394,14 @@ body {
 .title-divider {
   width: 60px;
   height: 2px;
-  background: #d6336c;
+  background: var(--theme-accent-strong);
   margin: 12px 0 24px 0;
   border-radius: 10px;
 }
 
 .letter-intro {
   font-size: 0.95rem;
-  color: #555;
+  color: var(--theme-text-muted);
   margin: 0 0 1rem;
   line-height: 1.6;
 }
@@ -290,7 +412,7 @@ body {
 
 .letter-body p {
   font-size: 0.95rem;
-  color: #444;
+  color: var(--theme-text-body);
   line-height: 1.7;
   margin: 0;
 }
@@ -305,7 +427,7 @@ body {
 
 .letter-body .letter-credit {
   font-size: 0.6rem;
-  color: #aaa;
+  color: var(--theme-text-subtle);
   margin: 0.75rem 0 0;
   line-height: 1.5;
   font-style: italic;
@@ -317,7 +439,7 @@ body {
   z-index: 3;
   font-family: var(--font-title);
   font-size: 0.95rem;
-  color: #c25a7a;
+  color: var(--theme-accent);
   margin: 1.5rem 0 0;
   padding-right: 6rem;
   font-weight: 500;
@@ -371,7 +493,7 @@ body {
   vertical-align: middle;
 }
 
-/* Masking tape en las cuatro esquinas */
+/* Masking tape en las cuatro esquinas (neutro, poco tematizado) */
 .letter-photo-tape {
   position: absolute;
   width: 22px;
@@ -424,8 +546,8 @@ body {
   gap: 0.25rem;
   aspect-ratio: 16 / 9;
   min-height: 0;
-  background: var(--pink-muted);
-  color: #c25a7a;
+  background: var(--theme-card-bg-2);
+  color: var(--theme-accent);
   font-size: 0.7rem;
 }
 
@@ -454,7 +576,7 @@ body {
 .letter-photo-lightbox-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--theme-lightbox-backdrop);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
@@ -477,8 +599,8 @@ body {
   justify-content: center;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  color: #333;
+  background: var(--theme-lightbox-close-bg);
+  color: var(--theme-lightbox-close-color);
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
@@ -490,7 +612,7 @@ body {
 
 .letter-photo-lightbox-close:hover,
 .letter-photo-lightbox-close:focus-visible {
-  background: #fff;
+  background: var(--theme-surface);
   transform: scale(1.08);
 }
 
@@ -653,6 +775,224 @@ body {
 @keyframes decorFade {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
+}
+
+/* ========== Temas 1–5 (0 = rosa en :root) ========== */
+html[data-theme="1"] {
+  --theme-bg-1: #e8f4fc;
+  --theme-bg-2: #d4ebf7;
+  --theme-text: #1a3a4a;
+  --theme-accent: #2e7db5;
+  --theme-accent-strong: #1a5f8a;
+  --theme-text-muted: #3d5a6c;
+  --theme-text-body: #2d4554;
+  --theme-text-subtle: #5a7a8a;
+  --theme-card-bg-1: #f0f9ff;
+  --theme-card-bg-2: #e6f4fc;
+  --theme-card-bg-3: #dceef8;
+  --theme-card-bg-inner-1: #ffffff;
+  --theme-card-bg-inner-2: #f5fbff;
+  --theme-card-border: rgba(46, 125, 181, 0.2);
+  --theme-card-shadow: 0 25px 60px rgba(26, 95, 138, 0.12);
+  --theme-card-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --theme-frame-1: #7ec8e3;
+  --theme-frame-2: #5ba3c6;
+  --theme-frame-shadow: 0 40px 80px rgba(26, 95, 138, 0.2), 0 15px 30px rgba(0, 0, 0, 0.08);
+  --theme-surface: #ffffff;
+  --theme-shadow-soft: 0 4px 16px rgba(126, 200, 227, 0.25);
+  --theme-controls-color: #2e7db5;
+  --theme-controls-bg: #ffffff;
+  --theme-controls-border: #a8d4eb;
+  --theme-loading-bg-1: #e0f2fc;
+  --theme-loading-bg-2: #bae6fd;
+  --theme-loading-text: #0369a1;
+  --theme-focus-ring: rgba(46, 125, 181, 0.7);
+  --theme-envelope-base-1: #e8f4fc;
+  --theme-envelope-base-2: #cce7f5;
+  --theme-envelope-border: #99cfe8;
+  --theme-envelope-front: #e0f2fc;
+  --theme-envelope-flap: #cce7f5;
+  --theme-envelope-seal-1: #7ec8e3;
+  --theme-envelope-seal-2: #2e7db5;
+  --theme-envelope-shadow: 0 4px 12px rgba(46, 125, 181, 0.25);
+  --theme-lightbox-backdrop: rgba(0, 0, 0, 0.75);
+  --theme-lightbox-close-bg: rgba(255, 255, 255, 0.95);
+  --theme-lightbox-close-color: #1a3a4a;
+  --theme-bg-fallback: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 50%, #e0f2fc 100%);
+}
+
+html[data-theme="2"] {
+  --theme-bg-1: #f0fdf4;
+  --theme-bg-2: #dcfce7;
+  --theme-text: #1a3d1a;
+  --theme-accent: #2d7a3e;
+  --theme-accent-strong: #166534;
+  --theme-text-muted: #3d5c3d;
+  --theme-text-body: #2d4a2d;
+  --theme-text-subtle: #5a7a5a;
+  --theme-card-bg-1: #f7fef8;
+  --theme-card-bg-2: #ecfdf0;
+  --theme-card-bg-3: #dff9e6;
+  --theme-card-bg-inner-1: #ffffff;
+  --theme-card-bg-inner-2: #f5fef7;
+  --theme-card-border: rgba(45, 122, 62, 0.2);
+  --theme-card-shadow: 0 25px 60px rgba(22, 101, 52, 0.1);
+  --theme-card-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --theme-frame-1: #86efac;
+  --theme-frame-2: #22c55e;
+  --theme-frame-shadow: 0 40px 80px rgba(22, 101, 52, 0.2), 0 15px 30px rgba(0, 0, 0, 0.06);
+  --theme-surface: #ffffff;
+  --theme-shadow-soft: 0 4px 16px rgba(134, 239, 172, 0.3);
+  --theme-controls-color: #22c55e;
+  --theme-controls-bg: #ffffff;
+  --theme-controls-border: #bbf7d0;
+  --theme-loading-bg-1: #dcfce7;
+  --theme-loading-bg-2: #bbf7d0;
+  --theme-loading-text: #166534;
+  --theme-focus-ring: rgba(34, 197, 94, 0.7);
+  --theme-envelope-base-1: #f0fdf4;
+  --theme-envelope-base-2: #dcfce7;
+  --theme-envelope-border: #bbf7d0;
+  --theme-envelope-front: #ecfdf5;
+  --theme-envelope-flap: #dcfce7;
+  --theme-envelope-seal-1: #86efac;
+  --theme-envelope-seal-2: #22c55e;
+  --theme-envelope-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+  --theme-lightbox-backdrop: rgba(0, 0, 0, 0.75);
+  --theme-lightbox-close-bg: rgba(255, 255, 255, 0.95);
+  --theme-lightbox-close-color: #1a3d1a;
+  --theme-bg-fallback: linear-gradient(135deg, #bbf7d0 0%, #86efac 50%, #dcfce7 100%);
+}
+
+html[data-theme="3"] {
+  --theme-bg-1: #fefce8;
+  --theme-bg-2: #fef9c3;
+  --theme-text: #3d3800;
+  --theme-accent: #b8860b;
+  --theme-accent-strong: #9a7b00;
+  --theme-text-muted: #5c5500;
+  --theme-text-body: #4a4500;
+  --theme-text-subtle: #7a7500;
+  --theme-card-bg-1: #fffef0;
+  --theme-card-bg-2: #fefde8;
+  --theme-card-bg-3: #fef9d9;
+  --theme-card-bg-inner-1: #ffffff;
+  --theme-card-bg-inner-2: #fffef5;
+  --theme-card-border: rgba(184, 134, 11, 0.25);
+  --theme-card-shadow: 0 25px 60px rgba(154, 123, 0, 0.12);
+  --theme-card-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --theme-frame-1: #fde047;
+  --theme-frame-2: #eab308;
+  --theme-frame-shadow: 0 40px 80px rgba(234, 179, 8, 0.25), 0 15px 30px rgba(0, 0, 0, 0.08);
+  --theme-surface: #ffffff;
+  --theme-shadow-soft: 0 4px 16px rgba(253, 224, 71, 0.3);
+  --theme-controls-color: #b8860b;
+  --theme-controls-bg: #ffffff;
+  --theme-controls-border: #fef08a;
+  --theme-loading-bg-1: #fef9c3;
+  --theme-loading-bg-2: #fef08a;
+  --theme-loading-text: #713f12;
+  --theme-focus-ring: rgba(234, 179, 8, 0.7);
+  --theme-envelope-base-1: #fefce8;
+  --theme-envelope-base-2: #fef9c3;
+  --theme-envelope-border: #fef08a;
+  --theme-envelope-front: #fefde8;
+  --theme-envelope-flap: #fef9c3;
+  --theme-envelope-seal-1: #fde047;
+  --theme-envelope-seal-2: #eab308;
+  --theme-envelope-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+  --theme-lightbox-backdrop: rgba(0, 0, 0, 0.75);
+  --theme-lightbox-close-bg: rgba(255, 255, 255, 0.95);
+  --theme-lightbox-close-color: #3d3800;
+  --theme-bg-fallback: linear-gradient(135deg, #fef08a 0%, #fde047 50%, #fefce8 100%);
+}
+
+html[data-theme="4"] {
+  --theme-bg-1: #fff7ed;
+  --theme-bg-2: #ffedd5;
+  --theme-text: #431407;
+  --theme-accent: #c2410c;
+  --theme-accent-strong: #9a3412;
+  --theme-text-muted: #5c3d2e;
+  --theme-text-body: #4a3226;
+  --theme-text-subtle: #7a5c4a;
+  --theme-card-bg-1: #fffaf5;
+  --theme-card-bg-2: #fff5eb;
+  --theme-card-bg-3: #ffebe0;
+  --theme-card-bg-inner-1: #ffffff;
+  --theme-card-bg-inner-2: #fffaf5;
+  --theme-card-border: rgba(194, 65, 12, 0.2);
+  --theme-card-shadow: 0 25px 60px rgba(154, 52, 18, 0.12);
+  --theme-card-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --theme-frame-1: #fdba74;
+  --theme-frame-2: #ea580c;
+  --theme-frame-shadow: 0 40px 80px rgba(234, 88, 12, 0.2), 0 15px 30px rgba(0, 0, 0, 0.08);
+  --theme-surface: #ffffff;
+  --theme-shadow-soft: 0 4px 16px rgba(253, 186, 116, 0.3);
+  --theme-controls-color: #c2410c;
+  --theme-controls-bg: #ffffff;
+  --theme-controls-border: #fed7aa;
+  --theme-loading-bg-1: #ffedd5;
+  --theme-loading-bg-2: #fed7aa;
+  --theme-loading-text: #9a3412;
+  --theme-focus-ring: rgba(234, 88, 12, 0.7);
+  --theme-envelope-base-1: #fff7ed;
+  --theme-envelope-base-2: #ffedd5;
+  --theme-envelope-border: #fed7aa;
+  --theme-envelope-front: #fffaf5;
+  --theme-envelope-flap: #ffedd5;
+  --theme-envelope-seal-1: #fdba74;
+  --theme-envelope-seal-2: #ea580c;
+  --theme-envelope-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+  --theme-lightbox-backdrop: rgba(0, 0, 0, 0.75);
+  --theme-lightbox-close-bg: rgba(255, 255, 255, 0.95);
+  --theme-lightbox-close-color: #431407;
+  --theme-bg-fallback: linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fff7ed 100%);
+}
+
+/* Tema 5 - Dark */
+html[data-theme="5"] {
+  --theme-bg-1: #1a1a1e;
+  --theme-bg-2: #121216;
+  --theme-text: #e4e4e7;
+  --theme-accent: #a78bfa;
+  --theme-accent-strong: #8b5cf6;
+  --theme-text-muted: #a1a1aa;
+  --theme-text-body: #d4d4d8;
+  --theme-text-subtle: #71717a;
+  --theme-card-bg-1: #27272a;
+  --theme-card-bg-2: #222226;
+  --theme-card-bg-3: #1f1f23;
+  --theme-card-bg-inner-1: #2d2d32;
+  --theme-card-bg-inner-2: #28282e;
+  --theme-card-border: rgba(139, 92, 246, 0.25);
+  --theme-card-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  --theme-card-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --theme-frame-1: #4c3d6b;
+  --theme-frame-2: #6d28d9;
+  --theme-frame-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 15px 30px rgba(109, 40, 217, 0.2);
+  --theme-surface: #3f3f46;
+  --theme-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --theme-controls-color: #a78bfa;
+  --theme-controls-bg: #27272a;
+  --theme-controls-border: #3f3f46;
+  --theme-loading-bg-1: #18181b;
+  --theme-loading-bg-2: #27272a;
+  --theme-loading-text: #a1a1aa;
+  --theme-focus-ring: rgba(167, 139, 250, 0.6);
+  --theme-envelope-base-1: #27272a;
+  --theme-envelope-base-2: #1f1f23;
+  --theme-envelope-border: #3f3f46;
+  --theme-envelope-front: #2d2d32;
+  --theme-envelope-flap: #252528;
+  --theme-envelope-seal-1: #6d28d9;
+  --theme-envelope-seal-2: #5b21b6;
+  --theme-envelope-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --theme-lightbox-backdrop: rgba(0, 0, 0, 0.88);
+  --theme-lightbox-close-bg: rgba(63, 63, 70, 0.95);
+  --theme-lightbox-close-color: #e4e4e7;
+  --theme-bg-fallback: linear-gradient(135deg, #27272a 0%, #1a1a1e 50%, #18181b 100%);
+  --theme-card-shine: rgba(255, 255, 255, 0.06);
 }
 
 @media (prefers-reduced-motion: reduce) {

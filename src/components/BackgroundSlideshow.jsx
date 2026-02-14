@@ -10,8 +10,6 @@ const PHOTOS = [
   `${BASE}photos/bg-06.webp`,
 ]
 
-const FALLBACK_GRADIENT = 'linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 50%, #ffe4e1 100%)'
-
 export default function BackgroundSlideshow() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [availablePhotos, setAvailablePhotos] = useState([])
@@ -51,7 +49,6 @@ export default function BackgroundSlideshow() {
     return (
       <div
         className="background-slideshow background-fallback"
-        style={{ background: FALLBACK_GRADIENT }}
         aria-hidden="true"
       />
     )

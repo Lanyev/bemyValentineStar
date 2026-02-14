@@ -7,15 +7,71 @@ import Matter from 'matter-js'
 
 const { Engine, World, Bodies, Body } = Matter
 
-// Paleta del proyecto (rosa pastel / San Valentín)
-const PALETTE = [
-  { r: 255, g: 245, b: 248 }, // pink-light
-  { r: 255, g: 182, b: 193 }, // pink-pastel
-  { r: 255, g: 192, b: 203 }, // pink-soft
-  { r: 255, g: 209, b: 220 }, // pink-muted
-  { r: 255, g: 255, b: 255 }, // white
-  { r: 194, g: 90, b: 122 },  // rose
+// Varias paletas (cada una = un “post-it” para cambiar el color de los corazones)
+const PALETTES = [
+  // 0 - Rosa / coral (post-it salmón)
+  [
+    { r: 255, g: 245, b: 248 },
+    { r: 255, g: 182, b: 193 },
+    { r: 255, g: 192, b: 203 },
+    { r: 255, g: 209, b: 220 },
+    { r: 255, g: 255, b: 255 },
+    { r: 194, g: 90, b: 122 },
+  ],
+  // 1 - Azul cielo
+  [
+    { r: 225, g: 245, b: 255 },
+    { r: 173, g: 216, b: 230 },
+    { r: 135, g: 206, b: 250 },
+    { r: 176, g: 224, b: 230 },
+    { r: 240, g: 248, b: 255 },
+    { r: 100, g: 149, b: 237 },
+  ],
+  // 2 - Verde menta
+  [
+    { r: 240, g: 255, b: 240 },
+    { r: 152, g: 255, b: 152 },
+    { r: 144, g: 238, b: 144 },
+    { r: 175, g: 238, b: 238 },
+    { r: 224, g: 255, b: 255 },
+    { r: 72, g: 187, b: 120 },
+  ],
+  // 3 - Amarillo pastel
+  [
+    { r: 255, g: 253, b: 231 },
+    { r: 255, g: 250, b: 205 },
+    { r: 255, g: 239, b: 213 },
+    { r: 255, g: 228, b: 181 },
+    { r: 255, g: 255, b: 224 },
+    { r: 255, g: 215, b: 0 },
+  ],
+  // 4 - Melocotón / beige
+  [
+    { r: 255, g: 245, b: 238 },
+    { r: 255, g: 218, b: 185 },
+    { r: 255, g: 228, b: 196 },
+    { r: 250, g: 235, b: 215 },
+    { r: 255, g: 250, b: 250 },
+    { r: 210, g: 180, b: 140 },
+  ],
+  // 5 - Dark (negros y oscuros)
+  [
+    { r: 28, g: 28, b: 32 },
+    { r: 45, g: 45, b: 55 },
+    { r: 62, g: 58, b: 72 },
+    { r: 85, g: 75, b: 95 },
+    { r: 55, g: 50, b: 65 },
+    { r: 120, g: 100, b: 140 },
+  ],
 ]
+
+/** Color representativo del post-it para la UI (primer color de cada paleta o uno medio) */
+function getPalettePostItColor(paletteIndex) {
+  const i = Math.min(Math.max(0, paletteIndex), PALETTES.length - 1)
+  const p = PALETTES[i]
+  const c = p[Math.min(1, p.length - 1)]
+  return `rgb(${c.r}, ${c.g}, ${c.b})`
+}
 
 const PHYSICS_STEP_MS = 1000 / 60
 const SETTINGS = {
@@ -83,10 +139,13 @@ function drawHeart(ctx, body, drawState, viewHeight) {
   const x = body.position.x
   const y = body.position.y
   const opacity = (c.baseOpacity ?? 0.7) * (c.opacityMul ?? 1)
+  const { r, g, b } = c.color || { r: 255, g: 192, b: 203 }
   if (c.type === 'silhouette') {
-    ctx.fillStyle = `rgba(120, 60, 90, ${opacity})`
+    const dr = Math.floor(r * 0.45)
+    const dg = Math.floor(g * 0.3)
+    const db = Math.floor(b * 0.4)
+    ctx.fillStyle = `rgba(${dr}, ${dg}, ${db}, ${opacity})`
   } else {
-    const { r, g, b } = c.color || { r: 255, g: 192, b: 203 }
     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`
   }
   ctx.save()
@@ -128,20 +187,20 @@ function createWalls(w, h) {
   ]
 }
 
-function pickRandomColor() {
-  const c = PALETTE[Math.floor(Math.random() * PALETTE.length)]
+function pickRandomColor(palette) {
+  const p = palette && palette.length ? palette : PALETTES[0]
+  const c = p[Math.floor(Math.random() * p.length)]
   return { r: c.r, g: c.g, b: c.b }
 }
 
 // Crea un solo corazón en la zona de spawn (abajo); para reciclaje
-function createOneHeart(w, h, layer, reducedMotion) {
+function createOneHeart(w, h, layer, reducedMotion, palette) {
   const cfg = LAYER_CONFIG[layer]
   const isSilhouette = Math.random() < cfg.silhouetteChance
   const baseSize = (8 + Math.random() * 14) * cfg.scale
   const radius = Math.max(4, baseSize * 0.6)
   const x = Math.random() * (w - 40) + 20
   const y = h + 20 + Math.random() * SETTINGS.spawnHeight
-  // Variación extra de velocidad por corazón (algunos más lentos)
   const speedVariation = 0.72 + Math.random() * 0.36
   const speed = (reducedMotion ? 12 : 27) * cfg.speedMul * speedVariation
   const vx = (Math.random() - 0.5) * 6
@@ -165,19 +224,18 @@ function createOneHeart(w, h, layer, reducedMotion) {
     phase: Math.random() * Math.PI * 2,
     phaseSpeed: 0.02 + Math.random() * 0.03,
     driftAngle: Math.random() * Math.PI * 2,
-    color: pickRandomColor(),
+    color: pickRandomColor(palette),
   }
   return body
 }
 
-function createHeartBodies(w, h, count, reducedMotion) {
+function createHeartBodies(w, h, count, reducedMotion, palette) {
   const near = Math.floor(count * 0.25)
   const mid = Math.floor(count * 0.45)
   const bodies = []
   for (let i = 0; i < count; i++) {
     const layer = i < near ? LAYER_NEAR : i < near + mid ? LAYER_MID : LAYER_FAR
-    const body = createOneHeart(w, h, layer, reducedMotion)
-    bodies.push(body)
+    bodies.push(createOneHeart(w, h, layer, reducedMotion, palette))
   }
   return bodies
 }
@@ -199,6 +257,8 @@ function init(canvas, options = {}) {
   reducedMotion = options.reducedMotion ?? (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   enabled = options.enabled !== false
   const frontCanvas = options.frontCanvas || null
+  let paletteIndex = Math.min(Math.max(0, options.paletteIndex ?? 0), PALETTES.length - 1)
+  let currentPalette = PALETTES[paletteIndex]
 
   const ctx = canvas.getContext('2d', { alpha: true })
   const ctxFront = frontCanvas ? frontCanvas.getContext('2d', { alpha: true }) : null
@@ -239,7 +299,7 @@ function init(canvas, options = {}) {
     World.add(engine.world, walls)
 
     const count = getParticleCount(w, h)
-    heartBodies = createHeartBodies(w, h, count, reducedMotion)
+    heartBodies = createHeartBodies(w, h, count, reducedMotion, currentPalette)
     World.add(engine.world, heartBodies)
   }
 
@@ -311,7 +371,7 @@ function init(canvas, options = {}) {
       if (b.position.y < -SETTINGS.despawnMargin) {
         const layer = b.heartConfig?.layer ?? LAYER_MID
         World.remove(engine.world, b)
-        const replacement = createOneHeart(w, h, layer, reducedMotion)
+        const replacement = createOneHeart(w, h, layer, reducedMotion, currentPalette)
         heartBodies[i] = replacement
         World.add(engine.world, replacement)
       }
@@ -391,6 +451,19 @@ function init(canvas, options = {}) {
 
   tick(0)
 
+  function setPaletteIndex(i) {
+    const idx = Math.min(Math.max(0, i), PALETTES.length - 1)
+    if (idx === paletteIndex) return
+    paletteIndex = idx
+    currentPalette = PALETTES[paletteIndex]
+    for (let j = 0; j < heartBodies.length; j++) {
+      const b = heartBodies[j]
+      if (b.heartConfig) {
+        b.heartConfig.color = pickRandomColor(currentPalette)
+      }
+    }
+  }
+
   return {
     destroy() {
       if (rafId != null) cancelAnimationFrame(rafId)
@@ -411,7 +484,8 @@ function init(canvas, options = {}) {
     setReducedMotion(value) {
       reducedMotion = !!value
     },
+    setPaletteIndex,
   }
 }
 
-export { init, SETTINGS }
+export { init, SETTINGS, PALETTES, getPalettePostItColor }
