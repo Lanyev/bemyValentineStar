@@ -170,6 +170,7 @@ body {
 }
 
 .letter-inner {
+  position: relative;
   max-width: 420px;
   width: 100%;
   background: rgba(255, 255, 255, 0.85);
@@ -277,8 +278,110 @@ body {
   font-size: 0.95rem;
   color: #c25a7a;
   margin: 1.5rem 0 0;
+  padding-right: 6rem;
   font-weight: 500;
   white-space: pre-line;
+}
+
+/* Foto en esquina inferior derecha, 16:9, inclinada (derecha hacia arriba), masking tape en esquinas */
+.letter-photo {
+  border-radius: var(--radius);
+  overflow: visible;
+  box-shadow: var(--shadow-card);
+}
+
+.letter-photo-corner {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 140px;
+  transform: rotate(6deg);
+  transform-origin: center center;
+  z-index: 2;
+  padding: 4px;
+  background: #fff;
+  border: 2px solid #2a2a2a;
+  border-radius: 3px 12px 8px 6px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.letter-photo-corner .letter-photo-img,
+.letter-photo-corner .letter-photo-placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  vertical-align: middle;
+  border-radius: 1px 10px 6px 4px;
+}
+
+/* Masking tape en las cuatro esquinas */
+.letter-photo-tape {
+  position: absolute;
+  width: 22px;
+  height: 10px;
+  background: linear-gradient(135deg, #f5f0e1 0%, #e8dfc4 50%, #ddd4b8 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.1);
+  opacity: 0.92;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.letter-photo-tape-tl {
+  top: -2px;
+  left: -2px;
+  transform: rotate(-45deg);
+}
+
+.letter-photo-tape-tr {
+  top: -2px;
+  right: -2px;
+  transform: rotate(45deg);
+}
+
+.letter-photo-tape-bl {
+  bottom: -2px;
+  left: -2px;
+  transform: rotate(45deg);
+}
+
+.letter-photo-tape-br {
+  bottom: -2px;
+  right: -2px;
+  transform: rotate(-45deg);
+}
+
+.letter-photo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 40vh;
+  object-fit: cover;
+  vertical-align: middle;
+}
+
+.letter-photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  background: var(--pink-muted);
+  color: #c25a7a;
+  font-size: 0.7rem;
+}
+
+.letter-photo-placeholder-icon {
+  font-size: 1.25rem;
+  opacity: 0.8;
+}
+
+.letter-photo-placeholder-text {
+  font-size: 0.7rem;
+  font-family: var(--font-text);
 }
 
 @media (prefers-reduced-motion: reduce) {

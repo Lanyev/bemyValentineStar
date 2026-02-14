@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { heroTexts, introTexts, closingTexts, letterBodies } from '../lib/texts'
+import { heroTexts, introTexts, closingTexts, letterBodies, photoSources } from '../lib/texts'
 import { randomItem } from '../lib/random'
 
 const FADE_IN_DURATION = 1
@@ -7,11 +7,12 @@ const TITLE_DELAY = 0.5
 const LINE_STAGGER = 0.2
 
 export default function LoveLetter() {
-  const { hero, intro, entry, closing } = useMemo(() => ({
+  const { hero, intro, entry, closing, photo } = useMemo(() => ({
     hero: randomItem(heroTexts, 'hero'),
     intro: randomItem(introTexts, 'intro'),
     entry: randomItem(letterBodies, 'letterBody'),
     closing: randomItem(closingTexts, 'closing'),
+    photo: photoSources.length ? randomItem(photoSources, 'photo') : null,
   }), [])
 
   const creditLines = [entry.song, entry.artist, entry.album, entry.year != null ? String(entry.year) : null]
@@ -22,6 +23,7 @@ export default function LoveLetter() {
   const delayIntro = delayHero + LINE_STAGGER
   const delayCredit = delayIntro + LINE_STAGGER + bodyLines.length * LINE_STAGGER
   const delayClosing = delayCredit + LINE_STAGGER
+  const delayPhoto = delayClosing + LINE_STAGGER
 
   return (
     <article className='love-letter' role='article'>
@@ -47,6 +49,24 @@ export default function LoveLetter() {
           </p>
         </div>
         <p className='letter-closing letter-reveal' style={{ '--reveal-delay': `${delayClosing}s` }}>{closing}</p>
+        <div
+          className='letter-photo letter-photo-corner letter-reveal'
+          style={{ '--reveal-delay': `${delayPhoto}s` }}
+          aria-hidden
+        >
+          <span className='letter-photo-tape letter-photo-tape-tl' aria-hidden />
+          <span className='letter-photo-tape letter-photo-tape-tr' aria-hidden />
+          <span className='letter-photo-tape letter-photo-tape-bl' aria-hidden />
+          <span className='letter-photo-tape letter-photo-tape-br' aria-hidden />
+          {photo != null && photo !== '' ? (
+            <img src={photo} alt='' className='letter-photo-img' />
+          ) : (
+            <div className='letter-photo-placeholder' aria-label='Placeholder de foto'>
+              <span className='letter-photo-placeholder-icon'>🖼️</span>
+              <span className='letter-photo-placeholder-text'>Foto</span>
+            </div>
+          )}
+        </div>
       </div>
     </article>
   )

@@ -3,6 +3,7 @@ const STORAGE_KEYS = {
   intro: 'lastIntroIndex',
   closing: 'lastClosingIndex',
   letterBody: 'lastLetterBodyIndex',
+  photo: 'lastPhotoIndex',
 }
 
 function getLastIndex(key) {
@@ -25,7 +26,7 @@ function setLastIndex(key, value) {
 /**
  * Devuelve un elemento aleatorio del array evitando repetición inmediata.
  * @param {unknown[]} array - Array de elementos
- * @param {'hero'|'intro'|'closing'|'letterBody'} storageKey - Clave para guardar el último índice
+ * @param {'hero'|'intro'|'closing'|'letterBody'|'photo'} storageKey - Clave para guardar el último índice
  * @returns {unknown} Elemento aleatorio
  */
 export function randomItem(array, storageKey) {

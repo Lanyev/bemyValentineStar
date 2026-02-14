@@ -111,3 +111,17 @@ Ojalá sea hoy, ojalá sea hoy...`,
     year: 2016,
   },
 ];
+
+/**
+ * Fuentes de imagen al final de la carta (fotos aleatorias).
+ * Rutas desde public/photos/ — con base para que funcione en dev y en GitHub Pages.
+ */
+const base = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.BASE_URL : ''
+
+export const photoSources = [
+  `${base}photos/20260124_182427.jpg`,
+  `${base}photos/20260124_182430.jpg`,
+  `${base}photos/20260124_182537.jpg`,
+  `${base}photos/IMG-20260131-WA0135.jpg`,
+  `${base}photos/IMG-20260131-WA0136.jpg`,
+]
