@@ -1,17 +1,16 @@
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { heroTexts, introTexts, closingTexts, letterBodies, photoSources } from '../lib/texts'
-import { randomItem } from '../lib/random'
-import LetterMusic from './LetterMusic'
 
 const FADE_IN_DURATION = 1
 const TITLE_DELAY = 0.5
 const LINE_STAGGER = 0.2
 
-export default function LoveLetter({ onRevealComplete }) {
+export default function LoveLetter({ letterContent, onRevealComplete }) {
   const [photoOpen, setPhotoOpen] = useState(false)
   const [photoRect, setPhotoRect] = useState(null)
   const photoRef = useRef(null)
+
+  const { hero, intro, entry, closing, photo } = letterContent
 
   const updatePhotoRect = () => {
     if (photoRef.current) {
@@ -34,14 +33,6 @@ export default function LoveLetter({ onRevealComplete }) {
     if (photoRef.current) observer.observe(photoRef.current)
     return () => observer.disconnect()
   }, [photoRect])
-
-  const { hero, intro, entry, closing, photo } = useMemo(() => ({
-    hero: randomItem(heroTexts, 'hero'),
-    intro: randomItem(introTexts, 'intro'),
-    entry: randomItem(letterBodies, 'letterBody'),
-    closing: randomItem(closingTexts, 'closing'),
-    photo: photoSources.length ? randomItem(photoSources, 'photo') : null,
-  }), [])
 
   const creditLines = [entry.song, entry.artist, entry.album, entry.year != null ? String(entry.year) : null]
     .filter(Boolean)
@@ -85,11 +76,6 @@ export default function LoveLetter({ onRevealComplete }) {
           >
             {creditLines.join('\n')}
           </p>
-          {entry.audioUrl && (
-            <div className='letter-reveal' style={{ '--reveal-delay': `${delayCredit + LINE_STAGGER}s` }}>
-              <LetterMusic entry={entry} />
-            </div>
-          )}
         </div>
         <p className='letter-closing letter-reveal' style={{ '--reveal-delay': `${delayClosing}s` }}>{closing}</p>
         <button

@@ -1,14 +1,16 @@
 import { useRef, useEffect, useState } from 'react'
 import { init } from '../lib/heartParticles'
 import PalettePostIts from './PalettePostIts'
+import LetterMusic from './LetterMusic'
 
 /**
  * Overlay de partículas: corazones luminosos (tipo mariposas Hollow Knight).
  * Canvas fullscreen detrás del UI, pointer-events: none.
  * Por defecto ON; si prefers-reduced-motion, OFF.
  * Botón opcional para refrescar la carta; post-its para cambiar paleta de corazones.
+ * musicEntry: entrada de la carta actual para reproducir su pista; botón corazón arriba de la paleta.
  */
-export default function HeartParticles({ onRefreshLetter, onBackToEnvelope, paletteIndex = 0, onPaletteChange, showControls = true }) {
+export default function HeartParticles({ onRefreshLetter, onBackToEnvelope, paletteIndex = 0, onPaletteChange, showControls = true, musicEntry = null, autoPlayMusic = false }) {
   const backCanvasRef = useRef(null)
   const frontCanvasRef = useRef(null)
   const instanceRef = useRef(null)
@@ -69,8 +71,14 @@ export default function HeartParticles({ onRefreshLetter, onBackToEnvelope, pale
         className="heart-particles-canvas heart-particles-canvas-front"
         aria-hidden="true"
       />
+      {musicEntry?.audioUrl && (
+        <div className={`letter-controls-music-wrap ${showControls ? 'letter-controls-music-visible' : ''}`}>
+          <LetterMusic entry={musicEntry} autoPlay={autoPlayMusic} buttonOnly />
+        </div>
+      )}
       {showControls && (onRefreshLetter || onPaletteChange || onBackToEnvelope) && (
         <div className="letter-controls">
+          <div className="letter-controls-row">
           <div className="letter-controls-left">
             {onRefreshLetter && (
               <button
@@ -104,6 +112,7 @@ export default function HeartParticles({ onRefreshLetter, onBackToEnvelope, pale
                 Regresar
               </button>
             )}
+          </div>
           </div>
         </div>
       )}

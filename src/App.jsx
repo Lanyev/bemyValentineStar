@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import EnvelopeIntro from './components/EnvelopeIntro'
 import LoveLetter from './components/LoveLetter'
 import BackgroundSlideshow from './components/BackgroundSlideshow'
 import HeartParticles from './components/HeartParticles'
 import DecorativeLayer from './components/DecorativeLayer'
 import PalettePostIts from './components/PalettePostIts'
+import { heroTexts, introTexts, closingTexts, letterBodies, photoSources } from './lib/texts'
+import { randomItem } from './lib/random'
 import './styles/global.css'
 
 export default function App() {
@@ -13,6 +15,20 @@ export default function App() {
   const [paletteIndex, setPaletteIndex] = useState(0)
   const [envelopeOpening, setEnvelopeOpening] = useState(false)
   const [letterRevealComplete, setLetterRevealComplete] = useState(false)
+
+  const letterContent = useMemo(
+    () =>
+      phase === 'letter'
+        ? {
+            hero: randomItem(heroTexts, 'hero'),
+            intro: randomItem(introTexts, 'intro'),
+            entry: randomItem(letterBodies, 'letterBody'),
+            closing: randomItem(closingTexts, 'closing'),
+            photo: photoSources.length ? randomItem(photoSources, 'photo') : null,
+          }
+        : null,
+    [phase, letterKey]
+  )
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', String(paletteIndex))
@@ -49,7 +65,7 @@ export default function App() {
         </>
       )}
 
-      {phase === 'letter' && (
+      {phase === 'letter' && letterContent && (
         <>
           <HeartParticles
             onRefreshLetter={handleRefreshLetter}
@@ -57,8 +73,14 @@ export default function App() {
             paletteIndex={paletteIndex}
             onPaletteChange={setPaletteIndex}
             showControls={letterRevealComplete}
+            musicEntry={letterContent.entry}
+            autoPlayMusic
           />
-          <LoveLetter key={letterKey} onRevealComplete={() => setLetterRevealComplete(true)} />
+          <LoveLetter
+            key={letterKey}
+            letterContent={letterContent}
+            onRevealComplete={() => setLetterRevealComplete(true)}
+          />
         </>
       )}
     </>
